@@ -52,5 +52,3 @@ for i in range(5):
 			print('在骰一次')
 	else:
 		break
-	
-				#你好

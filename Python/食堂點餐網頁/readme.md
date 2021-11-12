@@ -13,13 +13,13 @@
 * Web前端技術：HTML、CSS、JavaScript和Jquery等。
 * 前端代碼引用：https://github.com/ColorlibHQ/AdminLTE 、 www.xuebiancheng.cn
 
-## 🎨　E-R圖 / 項目功能模塊圖
+## 🎨　E-R圖 / 項目功能模塊圖：
 <img src="https://user-images.githubusercontent.com/79140074/141459842-0e438da2-6ce2-49ba-b9b0-cf54216b12c3.png" width="420">   <img src="https://user-images.githubusercontent.com/79140074/141459845-ee948a55-e651-4f2b-8893-db9aae4a99f0.png" width="457">
 
-## 📝　員工後臺管理應用
+## 📝　員工後臺管理應用：
 網站後台模板採用github上提供的一個後台管理界面，
 
-網址：https://github.com/ColorlibHQ/AdminLTE 、 https://github.com/alecfan/mstp_17_akira （已過時）
+網址：https://github.com/ColorlibHQ/AdminLTE 、 https://github.com/alecfan/mstp_17_akira
 
 <table>
   <tr>
@@ -67,8 +67,8 @@
 
 
 
-## 📝　食堂前臺管理應用
-網站前台模板採用網址：www.xuebiancheng.cn的課程
+## 📝　食堂前臺管理應用：
+網站前台模板採用網址：www.xuebiancheng.cn 網站課程。
 <table>
   <tr>
     <td>模塊</td>
@@ -106,3 +106,53 @@
     <td>員工、管理員</td>
  </tr>
 </table>
+
+## 📞　前後台網址：
+http://主機名:端口/應用名/視圖名/函數名
+
+* 前端登入：http://127.0.0.1:8000/login
+* 前端首頁：http://127.0.0.1:8000/web/
+* 後端登入：http://127.0.0.1:8000/myadmin/login
+* 後端首頁：http://127.0.0.1:8000/myadmin/
+
+## 📂　項目的目錄結構
+本次項目共計二個應用：myadmin(後臺)、web(前臺)
+
+```` 
+📂myweb/ 項目目錄
+  |   
+  |--📂myadmin/ 後台管理應用
+  |    |--📂views/
+  |    |    |--📄category.py 菜品分類管理視圖
+  |    |    |--📄index.py 後台首頁、登錄、退出、驗證碼加載等視圖方法
+  |    |    |--📄member.py 會員管理視圖
+  |    |    |--📄product.py 菜品信息管理視圖
+  |    |    |--📄shop.py 店鋪管理視圖
+  |    |    |--📄user.py 員工管理視圖
+  |    |--📄models.py  定義了整個前後台網站的models
+  |    |--📄shopmiddleware.py 定了整個網站的中間件（驗證是否登錄及權限管理）
+  |    |--📄urls.py 配置了整個網站後台所有請求路由
+  |
+  |--📂web/ 前台應用（大堂點餐）
+  |    |--📂views/
+  |    |    |--📄cart.py 購物車管理視圖
+  |    |    |--📄index.py 前臺的登錄、退出、驗證碼、加載店舖商品等方法
+  |    |    |--📄orders.py 訂單管理視圖
+  |    |--📄urls.py 配置了整個網站前台所有請求路由
+  |
+  |--📂myobject/ 項目目錄
+  |    |--📄settings.py 設定前後臺app、中間件、TEMPLATES、STATICFILES
+  |    |--📄urls.py 加載所有網站前後臺的路由
+  |    |--📄wsgi.py
+  |
+  |--📂statics/ 靜態資源目錄
+  |    |--📂uploads/   上傳文件、圖片的存儲目錄
+  |    |--📂myadmin/   後臺管理靜態資源目錄
+  |    |--📂web/       前臺管理靜態資源目錄
+  |
+  |--📂templates/ 模板目錄
+  |    |--📂myadmin/   後台管理模板目錄
+  |    |--📂web/       前台管理模板目錄
+  |
+  |--📄manage.py 入口文件
+````

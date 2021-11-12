@@ -1,0 +1,18 @@
+<table class="table table-hover">
+    <tr>
+        <th>序號</th>
+        <th>菜品名稱</th>
+        <th>單價</th>
+        <th>數量</th>
+        <th>小計</th>
+    </tr>
+    {% for vo in detaillist %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ vo.product_name }}</td>
+        <td>${{ vo.price }}</td>
+        <td>{{ vo.quantity }}</td>
+        <td>${% widthratio  vo.price 1 vo.quantity %}</td>
+    </tr>
+    {% endfor %}
+</table>

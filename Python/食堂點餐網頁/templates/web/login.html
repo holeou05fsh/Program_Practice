@@ -1,0 +1,65 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap.css' %}">
+</head>
+<body>
+        <div class="container">
+        <h1 class="form-heading">login Form</h1>
+        <div class="login-form">
+            <div class="main-div">
+                <div class="panel">
+                    <h2 style="font-size:26px;">點 餐 系 統 登 錄 頁 面</h2>
+                </div>
+                <form action="{% url 'web_dologin' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <select name="shop_id" class="form-control">
+                            <option value="0"> - - 請選擇商鋪名稱 - - </option>
+                            {% for shop in shoplist %}
+                                <option value="{{ shop.id }}"> {{ shop.name }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="username" class="form-control"  placeholder="登錄帳號">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="pass" class="form-control" placeholder="登錄密碼">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="code" style="display:inline;width:120px;float:left;" class="form-control" placeholder="驗證碼">
+                        <img src="{% url 'web_verify'%}" onclick="this.src='{% url 'web_verify' %}?sn='+Math.random()" style="float:right;margin:5px 10px;" />
+                    </div>
+
+                    <button type="submit" style="margin-top:10px" class="btn btn-primary">登錄</button>
+
+                    <div class="form-group">
+                        <p class="login-box-msg" style="color:red">
+                            {% if request.GET.errinfo == '1' %}
+                                請選擇所在店鋪名稱
+                            {% elif request.GET.errinfo == '2' %}
+                                驗證碼錯誤
+                            {% elif request.GET.errinfo == '3' %}
+                                帳號不存在
+                            {% elif request.GET.errinfo == '4' %}
+                                無效帳號
+                            {% elif request.GET.errinfo == '5' %}
+                                帳號密碼錯誤
+                            {% endif %}
+                        </p>
+                    </div>
+                </form>
+                測試帳號：zhangsan , 123
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'web/js/jquery.min.js' %}"></script>
+    <script src="{% static 'web/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

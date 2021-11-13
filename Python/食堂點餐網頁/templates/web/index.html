@@ -108,8 +108,8 @@
 
                     <div class="panel-footer" style="height:50px">
                         <div style="width:120px;float:left;margin:5px 0px;">合计：$<span style="color:red;font-weight:bold;">{{ request.session.total_money }}</span> 元</div>
-                        <button type="submit" onclick="dosubmit()" class="btn btn-warning" style="width:120px;float:right">结 &nbsp; 算</button>
-                        <button type="button" onclick="window.location='{% url 'web_cart_clear' %}'" class="btn btn-danger" style="width:60px;float:right">清 空</button>
+                        <button type="submit" onclick="dosubmit()" class="btn btn-warning" style="width:130px;float:right">结 &nbsp; 算</button>
+                        <button style="position: absolute; right:180px;"  type="button" onclick="window.location='{% url 'web_cart_clear' %}'" class="btn btn-danger" style="width:60px;float:right">清 空</button>
                     </div>
 
             </div>

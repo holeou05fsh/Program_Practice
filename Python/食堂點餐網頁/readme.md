@@ -112,8 +112,8 @@ http://主機名:端口/應用名/視圖名/函數名
 
 * 本機前端登入：http://127.0.0.1:8000/login
 * 本機後端登入：http://127.0.0.1:8000/myadmin/
-* 雲端前端登入：https://holeou04.pythonanywhere.com/
-* 雲端後端登入：https://holeou04.pythonanywhere.com/myadmin/
+* 雲端前端登入(pythonanywhere)：https://holeou04.pythonanywhere.com/
+* 雲端後端登入(pythonanywhere)：https://holeou04.pythonanywhere.com/myadmin/
 
 ## 📂　項目的目錄結構：
 本次項目共計二個應用：myadmin(後台)、web(前台)

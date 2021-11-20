@@ -30,7 +30,8 @@
 
 ## 📝　‘十八豆遊戲’ 執行結果：
 
-![1](https://user-images.githubusercontent.com/79140074/142721566-c00f1a94-894d-4508-bca7-415e0279994d.png)
+![1](https://user-images.githubusercontent.com/79140074/142722287-c1f3c7a7-85d2-40fb-b47d-ba30293ee6dc.png)
+
 
 
 圖示解說：

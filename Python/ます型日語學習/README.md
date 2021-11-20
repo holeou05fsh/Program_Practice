@@ -29,7 +29,7 @@
 
 在OJAD網站中爬取單字，爬200頁的單字(約3594個單字)，爬出單字有其他型態，用正則表達式(regex)，把ます型給取出
 ****
-![2](https://user-images.githubusercontent.com/79140074/142711260-a586db9e-6e80-48b5-b353-ba5519d1b4a6.png)
+![2](https://user-images.githubusercontent.com/79140074/142711624-810518b0-b080-4392-8e00-9b5786601c62.png)
 
 用ます型單字，再weblio網站爬句子
 ****

@@ -26,12 +26,15 @@
 ## 📝　程式過程展示：
 
 ![1](https://user-images.githubusercontent.com/79140074/142711257-26f1e934-58e0-4dcb-acf8-a14098da3ad5.png)
+
 在OJAD網站中爬取單字，爬200頁的單字(約3594個單字)，爬出單字有其他型態，用正則表達式(regex)，把ます型給取出
 ****
 ![2](https://user-images.githubusercontent.com/79140074/142711260-a586db9e-6e80-48b5-b353-ba5519d1b4a6.png)
+
 用ます型單字，再weblio網站爬句子
 ****
 ![3](https://user-images.githubusercontent.com/79140074/142711262-cf497027-8d7e-40a2-bd52-fb22853d55a5.png)
+
 用單字爬意思，用selenium在沪江小D網站爬單字意思。
 ****
 
@@ -39,7 +42,7 @@
 ![11](https://user-images.githubusercontent.com/79140074/142711263-1686582e-c135-4998-ad72-757bf538a5a9.png)
 
 ****
-![12](https://user-images.githubusercontent.com/79140074/142711264-3c89389b-474e-42d8-9af9-24bed8e9720c.png)
+![12](https://user-images.githubusercontent.com/79140074/142711585-3d4c71ed-ead1-42d9-bef9-6de3175aae8b.png)
 
 ****
 ![13](https://user-images.githubusercontent.com/79140074/142711265-bee974d0-a8ac-4547-9d26-fa88f2900433.png)

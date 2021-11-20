@@ -47,3 +47,16 @@
 ****
 ![13](https://user-images.githubusercontent.com/79140074/142711265-bee974d0-a8ac-4547-9d26-fa88f2900433.png)
 
+## 📝　爬蟲網站：
+
+http://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/category:verb/order:name
+
+OJAD - Offene Jugendarbeit Dornbirn
+
+https://cjjc.weblio.jp/category/wchnt/z/32
+
+Weblio辞書
+
+https://dict.hjenglish.com/jp/
+
+沪江小D日语词典

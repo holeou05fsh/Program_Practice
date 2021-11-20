@@ -6,8 +6,8 @@ import os
 #%%------------------------------登入雲端救星------------------------------
 driver = webdriver.Chrome('C:/pythondrive/chromedriver.exe')
 driver.get('https://cloud.rookiesavior.net/')
-driver.find_element_by_name('Account').send_keys("105289549")
-driver.find_element_by_name('Password').send_keys("holeou04\n")
+driver.find_element_by_name('Account').send_keys("") #輸入帳號
+driver.find_element_by_name('Password').send_keys("\n") #輸入密碼(\n不要刪掉)
 time.sleep(0.8)
 # driver.find_element_by_link_text('我知道了').click()
 #%%------------------------------全部課程URL------------------------------

@@ -6,6 +6,8 @@
 
 ## 📝　程式過程展示：
 
+爬取資料
+
 ![1](https://user-images.githubusercontent.com/79140074/142720423-b783f8f5-8ebe-4a44-98e1-a11c0dcdd0e7.png)
 ****
 ![2](https://user-images.githubusercontent.com/79140074/142720426-f34a6497-d7e8-4e45-9915-b96b1cd79063.png)

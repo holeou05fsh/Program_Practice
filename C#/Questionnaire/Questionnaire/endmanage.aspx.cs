@@ -298,12 +298,12 @@ namespace Questionnaire
             int sessioncount = 0;
             foreach (string joinsession in _joinsessions)
             {
-                if (this.Session[joinsession] == null)
+                if (this.Session[joinsession] != null)
                     sessioncount += 1;
             }
-            if (sessioncount == 12)
+            if (sessioncount == _joinsessions.Length)
             {
-                this.Session["litmsgSureT"] = "※  問題上限12個";
+                this.Session["litmsgSureT"] = $"※  問題上限{_joinsessions.Length}個";
                 joincheck = false;
             }
 

@@ -73,7 +73,7 @@ namespace Questionnaire.Managers
                             command.Parameters.AddWithValue("@StartTime", StartTime);
                             command.Parameters.AddWithValue("@EndTime", EndTime);
                         }
-                            
+
                         connection.Open();
                         SqlDataReader reader = command.ExecuteReader();
 
@@ -90,7 +90,7 @@ namespace Questionnaire.Managers
                                 Title = (string)reader["Title"],
                                 Describe = (string)reader["Describe"],
                                 StartTime = (DateTime)reader["StartTime"],
-                                EndTime = (DateTime)reader["EndTime"], 
+                                EndTime = (DateTime)reader["EndTime"],
                                 Timestate = timestate,
                                 Sort = (Int64)reader["Sort"]
                             });
@@ -137,7 +137,7 @@ namespace Questionnaire.Managers
                 AND = "AND";
                 WHERE = "WHERE";
             }
-                
+
 
             string connStr = ConfigString.GetConfigString();
             string commandText =
@@ -193,7 +193,7 @@ namespace Questionnaire.Managers
                             string strstate = "開啟";
                             if (!(bool)reader["State"])
                                 strstate = "已關閉";
-                                
+
                             QuestionnaireData questionnaireData = new QuestionnaireData()
                             {
                                 ID = (int)reader["ID"],
@@ -374,6 +374,56 @@ namespace Questionnaire.Managers
                 }
             }
             catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        public QuestionnaireData GetfontinputQuestionnaire(int ID)
+        {
+           
+
+            string connStr = ConfigString.GetConfigString();
+            string commandText =
+                            $@"
+                                SELECT * FROM Questionnaire
+				                WHERE ID = @ID
+                            ";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.Parameters.AddWithValue("@ID", ID);
+
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            string timestate = "已完結";
+                            if ((DateTime)reader["EndTime"] > DateTime.Now)
+                                timestate = "投票中";
+
+                            QuestionnaireData QuestionnaireData = new QuestionnaireData()
+                            {
+                                ID = (int)reader["ID"],
+                                Title = (string)reader["Title"],
+                                Describe = (string)reader["Describe"],
+                                StartTime = (DateTime)reader["StartTime"],
+                                EndTime = (DateTime)reader["EndTime"],
+                                Timestate = timestate,
+                            };
+                            return QuestionnaireData;
+
+                        }
+                        return null;
+                    }
+                }
+            }
+            catch
             {
                 throw;
             }

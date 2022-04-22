@@ -20,19 +20,24 @@
 
             <div class="right-wrapper">
                 <div class="three">
-                    投票中<br />
-                    2021/09/01 ~ 2021/09/01
+                    <asp:Literal ID="lilTimestate" runat="server"></asp:Literal>
+                    <br />
+                    <%--投票中<br />--%>
+                    <asp:Literal ID="lilStartTime" runat="server"></asp:Literal>
+                     ~ 
+                    <asp:Literal ID="lilEndTime" runat="server"></asp:Literal>
+
+                    <%--2021/09/01 ~ 2021/09/01--%>
                 </div>
             </div>
         </div>
 
         <div class="input-head">
-            <h2>青春洋溢高中生頭票</h2>
+            <h2>
+                <asp:Literal ID="lilTitle" runat="server"></asp:Literal>
+            </h2>
             <p>
-                the sequence of numbers assigned to pages in a book or periodical.
-                later editions are identical in text and pagination
-                the sequence of numbers assigned to pages in a book or periodical.
-                later editions are identical in text and pagination
+                <asp:Literal ID="lilDescribe" runat="server"></asp:Literal>
             </p>
         </div>
 
@@ -47,19 +52,19 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>姓名</th>
+                            <th>手機</th>
                             <td>
                                 <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
-                            <th>姓名</th>
+                            <th>Email</th>
                             <td>
-                                <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="TextBox3" runat="server" TextMode="Email"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
-                            <th>姓名</th>
+                            <th>年齡</th>
                             <td>
                                 <asp:TextBox ID="TextBox4" runat="server"></asp:TextBox>
                             </td>
@@ -84,8 +89,8 @@
 
             <div class="input-button">
                 <h3>共1個問題</h3>
-                <asp:Button ID="btnCancel" runat="server" Text="取消" onclick="btnCancel_Click" />
-                <asp:Button ID="btnSure" runat="server" Text="確定" onclick="btnSure_Click" />
+                <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
+                <asp:Button ID="btnSure" runat="server" Text="確定" OnClick="btnSure_Click" />
             </div>
         </asp:PlaceHolder>
 
@@ -120,8 +125,8 @@
                 </div>
             </div>
             <div class="input-button">
-                <asp:Button ID="btnCancel2" runat="server" Text="取消" onclick="btnCancel2_Click" />
-                <asp:Button ID="btnSure2" runat="server" Text="確定" onclick="btnSure2_Click" />
+                <asp:Button ID="btnCancel2" runat="server" Text="取消" OnClick="btnCancel2_Click" />
+                <asp:Button ID="btnSure2" runat="server" Text="確定" OnClick="btnSure2_Click" />
             </div>
         </asp:PlaceHolder>
 
@@ -134,23 +139,29 @@
 
                     <p class="input-answer">核廢料(dsfdsf)</p>
                     <div class="input-show">
-                        <div class="input-barchart" style="width: 60%;"><p>60%  (3245人)</p></div>
+                        <div class="input-barchart" style="width: 60%;">
+                            <p>60%  (3245人)</p>
+                        </div>
                     </div>
 
                     <p class="input-answer">核廢料(dsfdsf)</p>
 
                     <div class="input-show">
-                        <div class="input-barchart" style="width: 40%;"><p>40%  (245人)</p></div>
+                        <div class="input-barchart" style="width: 40%;">
+                            <p>40%  (245人)</p>
+                        </div>
                     </div>
 
                     <p class="input-answer">核廢料(dsfdsf)</p>
                     <div class="input-show">
-                        <div class="input-barchart" style="width: 0%;"><p>0%  (0人)</p></div>
+                        <div class="input-barchart" style="width: 0%;">
+                            <p>0%  (0人)</p>
+                        </div>
                     </div>
                 </div>
                 <div class="input-button">
-                <asp:Button ID="btnSure3" runat="server" Text="確定" onclick="btnSure3_Click" />
-            </div>
+                    <asp:Button ID="btnSure3" runat="server" Text="確定" OnClick="btnSure3_Click" />
+                </div>
             </div>
         </asp:PlaceHolder>
 

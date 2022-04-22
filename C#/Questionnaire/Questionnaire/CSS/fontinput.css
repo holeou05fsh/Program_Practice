@@ -1,0 +1,171 @@
+﻿/*===================================*/
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.one,
+.two,
+.three {
+    display: inline-block;
+}
+
+.left-wrapper,
+.right-wrapper {
+    display: inline-block;
+}
+
+.one {
+    font-size: 60px;
+    margin:20px 0px 20px 60px;
+}
+
+.three {
+    font-size: 22px;
+    margin: 30px 60px 20px 0px;
+    text-align:right;
+}
+/*===================================*/
+
+.Questionnaire-input {
+    width:700px;
+    margin:auto;
+}
+
+.input-head {
+    font-size: 20px;
+    width: 700px;
+    margin: auto;
+}
+
+    .input-head h2 {
+        font-size: 36px;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .input-head p {
+        font-size: 23px;
+        margin-bottom: 20px;
+    }
+
+/*===================================*/
+
+.input-info table {
+    width: 400px;
+    border-collapse: collapse;
+}
+
+.input-info table tr {
+    border-bottom: solid 2px white;
+}
+
+.input-info table tr:last-child {
+    border-bottom: none;
+}
+
+.input-info table th {
+    position: relative;
+    width: 50%;
+    background-color: #7d7d7d;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+    .input-info table th:after {
+        display: block;
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        top: calc(50% - 10px);
+        right: -10px;
+        border-left: 10px solid #7d7d7d;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+    }
+
+    .input-info table td {
+        text-align: left;
+        width: 50%;
+        /*text-align: center;*/
+        background-color: #eee;
+        padding: 10px 20px;
+    }
+
+/*.main {
+    margin: 20px auto;
+    item-align: center;
+    width: 80%;
+}*/
+
+.input-radio {
+    margin-top: 50px;
+}
+
+.input-radio ol {
+    margin: 15px 0px 5px 0px;
+    font-size: 16px;
+}
+
+    .input-radio #rdoinput, .input-answer {
+        margin-left: 32px;
+    }
+
+/*===================================*/
+
+
+.input-button {
+    float: right;
+    margin-right: 300px;
+    margin-bottom: 100px;
+}
+
+    .input-button h3 {
+        text-align: right;
+        font-size: 24px;
+    }
+
+#btnCancel, #btnCancel2 {
+    margin-right: 200px;
+    font-size: 26px;
+    border-radius: 8px;
+    background-color: skyblue;
+}
+
+#btnSure, #btnSure2, #btnSure3 {
+    font-size: 26px;
+    border-radius:8px;
+    background-color: lightgreen;
+}
+
+
+/*===================================*/
+
+.input-answer {
+    margin-bottom: 0px;
+    font-size:18px;
+}
+
+.input-show {
+    width: 100%;
+    height: 30px;
+    border: 1px solid black;
+    margin: 5px 30px 30px 30px;
+}
+
+
+.input-barchart {
+    height: 30px;
+    border: 1px red black;
+    background-color: red;
+    color: blue;
+    font-size: 20px;
+    white-space: nowrap;
+}
+
+    .input-barchart p {
+        margin: 0px 0px 0px 20px;
+    }
+

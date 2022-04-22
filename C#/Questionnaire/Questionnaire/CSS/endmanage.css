@@ -1,0 +1,297 @@
+﻿#tab {
+    width: 700px;
+    background: #1caa5d;
+    border: solid 3px #1caa5d;
+    border-radius: 8px;
+    margin: auto;
+    margin-top: 25px;
+}
+
+    /* 頁籤ul */
+    #tab > ul {
+        /* overflow: hidden; */
+        margin: 0;
+        padding: 10px 20px 0 20px;
+    }
+
+        #tab > ul > li {
+            list-style-type: none;
+            font-size: 25px;
+        }
+
+            /* 頁籤上的文字 */
+            #tab > ul > li > a {
+                text-decoration: none;
+                font-size: 15px;
+                color: #333;
+                float: left;
+                padding: 10px;
+                margin-left: 5px;
+            }
+
+    /*頁籤div內容*/
+    #tab > div {
+        clear: both;
+        padding: 0 15px;
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+/*第一筆的底色*/
+span:target ~ #tab > ul li:first-child a {
+    background: #1caa5d;
+}
+
+span:target ~ #tab > div:first-of-type {
+    visibility: hidden;
+    height: 0;
+    padding: 0 15px;
+}
+
+span:target ~ #tab > div {
+    border-radius: 8px;
+}
+
+
+/*頁籤變換&第一筆*/
+span ~ #tab > ul li:first-child a,
+#tab-1:target ~ #tab > ul li a[href$="#tab-1"],
+#tab-2:target ~ #tab > ul li a[href$="#tab-2"],
+#tab-3:target ~ #tab > ul li a[href$="#tab-3"],
+#tab-4:target ~ #tab > ul li a[href$="#tab-4"] {
+    background: #fff;
+    border-radius: 5px 5px 0 0;
+}
+
+    span ~ #tab > ul li:first-child a::before,
+    #tab-1:target ~ #tab > ul li a[href$="#tab-1"]::before,
+    #tab-2:target ~ #tab > ul li a[href$="#tab-2"]::before,
+    #tab-3:target ~ #tab > ul li a[href$="#tab-3"]::before,
+    #tab-4:target ~ #tab > ul li a[href$="#tab-4"]::before {
+        background-color: white;
+        height: 100%;
+    }
+
+/*頁籤內容顯示&第一筆*/
+span ~ #tab > div:first-of-type,
+#tab-1:target ~ #tab > div.tab-content-1,
+#tab-2:target ~ #tab > div.tab-content-2,
+#tab-3:target ~ #tab > div.tab-content-3,
+#tab-4:target ~ #tab > div.tab-content-4 {
+    visibility: visible;
+    height: auto;
+    background: #fff;
+    padding: 20px
+}
+
+span {
+    display: none;
+}
+
+
+/*=====================================*/
+
+
+.managemain {
+    display: grid;
+    height: 500px;
+    grid-template-columns: 200px 1fr;
+}
+
+    .managemain .left {
+        background: #aaa;
+        padding: 60px 0px 0px 10px;
+        font-size: 22px;
+    }
+
+
+    .managemain .right {
+        background: #ccc;
+        padding: 20px;
+    }
+
+    .managemain .left .managelink li {
+        margin-bottom: 30px;
+    }
+
+/*================ 頁籤 1 =====================*/
+
+.tab-content-1 table {
+    margin: 0px 30px;
+}
+
+    .tab-content-1 table tr {
+        height: 60px;
+    }
+
+        .tab-content-1 table tr th {
+            font-size: 25px;
+            width: 150px;
+        }
+
+            .tab-content-1 table tr th:last-child {
+                font-size: 25px;
+                height: 0px;
+            }
+
+        .tab-content-1 table tr td input {
+            font-size: 25px;
+            width: 350px;
+        }
+
+        .tab-content-1 table tr td #chkopen {
+            width: auto;
+        }
+
+.input-button {
+    text-align: right;
+}
+
+#btnCancel, #btnCancel2, #btnCancel3 {
+    margin-right: 100px;
+    font-size: 26px;
+    border-radius: 8px;
+    background-color: skyblue;
+}
+
+#btnSure, #btnSure2 {
+    font-size: 26px;
+    border-radius: 8px;
+    background-color: lightgreen;
+    margin-right: 50px
+}
+
+
+/*===============頁籤2====================*/
+
+
+
+
+.tab-content-2 .questioninput table tr th {
+    font-size: 20px;
+    width: 80px;
+}
+
+.tab-content-2 .questioninput table tr td #btnjoin {
+    margin-left: 50px;
+}
+
+
+
+#btndelete {
+    border: none;
+    background-color: transparent;
+    font-size: 38px;
+}
+
+
+.questionshow {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+    .questionshow td, .questionshow th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .questionshow tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .questionshow tr:hover {
+        background-color: #ddd;
+    }
+
+    .questionshow th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #ccc;
+        color: white;
+    }
+
+
+/*===============頁籤3===================*/
+
+#btninfo {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid #1029ef;
+    font-size: 18px;
+    color: blue;
+    cursor: pointer;
+}
+
+    #btninfo:hover {
+        color: red;
+        border-bottom: 1px solid #ff0000;
+    }
+
+#inputCSV {
+    margin-bottom: 20px;
+    font-size: 24px;
+    background-color: darkseagreen;
+    border-radius: 8px;
+}
+
+.pagination {
+    margin: auto;
+    text-align: center;
+}
+
+    .pagination a {
+        font-size: 18px;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+
+/*------------------------------*/
+
+.infodata {
+    margin-top: 30px;
+    margin-left: 70px;
+}
+
+
+    .infodata tr td:nth-child(2) {
+        width: 260px;
+    }
+
+
+.infotext {
+    margin-left: 80px;
+}
+
+
+.infotext {
+    margin-top: 30px;
+}
+
+    .infotext table tr td:first-child {
+        width: 260px;
+    }
+
+    .infotext .t3 {
+        height: 50px;
+        vertical-align: bottom;
+    }
+
+
+#btnCancel3 {
+    margin-top: 40px;
+    float: right;
+}
+
+.msgSure {
+    height: 100px;
+}
+
+.lblmsgSure {
+    color: red;
+    font-size: 26px;
+}

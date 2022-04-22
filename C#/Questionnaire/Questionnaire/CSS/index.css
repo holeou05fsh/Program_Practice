@@ -1,0 +1,125 @@
+﻿#btndelete, #btnplus {
+    border: none;
+    background-color: transparent;
+    font-size: 38px;
+}
+
+#lblindextitle {
+    font-size: 60px;
+    margin: 10px 150px;
+}
+
+.Questionnaire-index {
+    width:100%;
+    margin:auto;
+}
+
+.seach {
+    border:1px solid #000;
+    padding: 20px 50px;
+}
+
+    .seach tr {
+        font-size: 32px;
+        height: 50px;
+    }
+
+    .seach td {
+        font-size: 32px;
+        line-height: 0px;
+    }
+
+.TextBox1 {
+    width: 85%;
+    height:22px
+}
+
+.TextBox2, .TextBox3 {
+    width: 90%;
+    height: 22px;
+}
+
+.TextBox3 {
+    margin-left: 10px;
+}
+
+
+/*    .Button1 {
+        height: 28px;
+        width: 70px;
+        margin-left: 20px;
+        border-radius: 8px;
+        background-color: skyblue;
+        color: blue;
+        font-size:18px
+    }*/
+
+
+/*------------------------------------*/
+
+.Questionnairelist {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-top:30px;
+}
+
+    .Questionnairelist td, .Questionnairelist th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .Questionnairelist tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .Questionnairelist tr:hover {
+        background-color: #ddd;
+    }
+
+    .Questionnairelist th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+    }
+
+.pagination {
+    margin: auto;
+    text-align: center;
+}
+
+    .pagination a {
+        font-size: 18px;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+
+
+
+    /*=================================*/
+
+
+.indexmain {
+    display: grid;
+    height: 500px;
+    grid-template-columns: 250px 1fr;
+}
+
+    .indexmain .left {
+        background: #aaa;
+        padding: 60px 0px 0px 10px;
+        font-size: 22px;
+    }
+
+
+    .indexmain .right {
+        background: #ccc;
+        padding: 20px;
+    }
+
+    .indexmain .left .indexlink li {
+        margin-bottom: 30px;
+    }

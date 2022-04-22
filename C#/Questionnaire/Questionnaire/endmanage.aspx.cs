@@ -298,7 +298,7 @@ namespace Questionnaire
             int sessioncount = 0;
             foreach (string joinsession in _joinsessions)
             {
-                if (this.Session[joinsession] != null) { }
+                if (this.Session[joinsession] == null)
                     sessioncount += 1;
             }
             if (sessioncount == 12)

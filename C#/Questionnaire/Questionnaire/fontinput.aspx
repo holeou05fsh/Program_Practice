@@ -24,7 +24,7 @@
                     <br />
                     <%--投票中<br />--%>
                     <asp:Literal ID="lilStartTime" runat="server"></asp:Literal>
-                     ~ 
+                    ~ 
                     <asp:Literal ID="lilEndTime" runat="server"></asp:Literal>
 
                     <%--2021/09/01 ~ 2021/09/01--%>
@@ -70,9 +70,18 @@
                             </td>
                         </tr>
                     </table>
+
+                    <div class="input-button">
+                            <asp:Literal ID="litmsg" runat="server"></asp:Literal>
+                        <h3>
+                            <asp:Literal ID="litqustioncount" runat="server"></asp:Literal>
+                        </h3>
+                        <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
+                        <asp:Button ID="btnSure" runat="server" Text="確定" OnClick="btnSure_Click" />
+                    </div>
                 </div>
 
-                <div class="input-radio">
+                <%-- <div class="input-radio">
                     <ol>
                         <li>請投給以下一位</li>
                     </ol>
@@ -84,14 +93,10 @@
                         <asp:ListItem>Item 4</asp:ListItem>
                     </asp:RadioButtonList>
 
-                </div>
+                </div>--%>
             </div>
 
-            <div class="input-button">
-                <h3>共1個問題</h3>
-                <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
-                <asp:Button ID="btnSure" runat="server" Text="確定" OnClick="btnSure_Click" />
-            </div>
+
         </asp:PlaceHolder>
 
         <asp:PlaceHolder ID="PlaceHolder2" runat="server" Visible="false">
@@ -100,34 +105,38 @@
                     <table>
                         <tr>
                             <th>姓名</th>
-                            <td>測試者</td>
+                            <td>
+                                <asp:Literal ID="Literal1" runat="server"></asp:Literal>
+                            </td>
                         </tr>
                         <tr>
                             <th>電話</th>
-                            <td>電話</td>
+                            <td>
+                                <asp:Literal ID="Literal2" runat="server"></asp:Literal>
+                            </td>
                         </tr>
                         <tr>
                             <th>EMAIL</th>
-                            <td>EMAIL</td>
+                            <td>
+                                <asp:Literal ID="Literal3" runat="server"></asp:Literal>
+                            </td>
                         </tr>
                         <tr>
                             <th>年齡</th>
-                            <td>21</td>
+                            <td>
+                                <asp:Literal ID="Literal4" runat="server"></asp:Literal>
+                            </td>
                         </tr>
                     </table>
-                </div>
-                <div class="input-radio">
-                    <ol>
-                        <li>請投給以下一位</li>
-                    </ol>
-                    <p class="input-answer">核廢料(dsfdsf)</p>
 
-                </div>
-            </div>
-            <div class="input-button">
+                    <div class="input-button">
                 <asp:Button ID="btnCancel2" runat="server" Text="取消" OnClick="btnCancel2_Click" />
                 <asp:Button ID="btnSure2" runat="server" Text="確定" OnClick="btnSure2_Click" />
             </div>
+                </div>
+                
+            </div>
+            
         </asp:PlaceHolder>
 
         <asp:PlaceHolder ID="PlaceHolder3" runat="server" Visible="false">

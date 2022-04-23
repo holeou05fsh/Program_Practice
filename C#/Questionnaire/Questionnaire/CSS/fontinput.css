@@ -30,6 +30,7 @@
 .Questionnaire-input {
     width:700px;
     margin:auto;
+    height:200px;
 }
 
 .input-head {
@@ -52,7 +53,8 @@
 /*===================================*/
 
 .input-info table {
-    width: 400px;
+    float:left;
+    width: 300px;
     border-collapse: collapse;
 }
 
@@ -94,31 +96,13 @@
         padding: 10px 20px;
     }
 
-/*.main {
-    margin: 20px auto;
-    item-align: center;
-    width: 80%;
-}*/
-
-.input-radio {
-    margin-top: 50px;
-}
-
-.input-radio ol {
-    margin: 15px 0px 5px 0px;
-    font-size: 16px;
-}
-
-    .input-radio #rdoinput, .input-answer {
-        margin-left: 32px;
-    }
 
 /*===================================*/
 
 
 .input-button {
     float: right;
-    margin-right: 300px;
+    margin-right: 100px;
     margin-bottom: 100px;
 }
 
@@ -128,7 +112,8 @@
     }
 
 #btnCancel, #btnCancel2 {
-    margin-right: 200px;
+    margin-left:50px;
+    margin-right: 100px;
     font-size: 26px;
     border-radius: 8px;
     background-color: skyblue;
@@ -136,9 +121,51 @@
 
 #btnSure, #btnSure2, #btnSure3 {
     font-size: 26px;
-    border-radius:8px;
+    border-radius: 8px;
     background-color: lightgreen;
 }
+
+/*------------------------------------*/
+
+
+.input-title {
+    margin:auto;
+    font-size: 20px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    display: block;
+    width:700px;
+}
+    .input-title p {
+        text-align: left;
+        margin-left: -20px;
+        margin-bottom: 0px;
+    }
+.input-radioo {
+    margin: auto;
+    width: 700px;
+}
+
+.input-txtinput {
+    margin: 0px auto;
+    /*margin-left:300px;*/
+    /*width: 200px;*/
+    text-align: center;
+}
+
+/*------------------------------------*/
+.input-radio {
+    margin-top: 50px;
+}
+
+.input-radio ol {
+    margin: 15px 0px 5px 0px;
+    font-size: 16px;
+}
+
+        .input-radio #rdoinput, .input-answer {
+            margin-left: 32px;
+        }
 
 
 /*===================================*/

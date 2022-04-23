@@ -55,7 +55,6 @@ namespace Questionnaire.Managers
             }
         }
 
-
         public void delQuestion(int QuestionnaireID)
         {
             string connStr = ConfigString.GetConfigString();
@@ -112,6 +111,36 @@ namespace Questionnaire.Managers
                 throw;
             }
         }
+
+        public void updateQuestion(int ID, string answer)
+        {
+            string connStr = ConfigString.GetConfigString();
+            string commandText = @"
+                                    UPDATE Question
+                                    SET
+                                        answer = @answer
+                                    WHERE ID = @ID
+                                ";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        connection.Open();
+                        command.Parameters.AddWithValue("@ID", ID);
+                        command.Parameters.AddWithValue("@answer", answer);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 
     }
 }

@@ -382,8 +382,6 @@ namespace Questionnaire.Managers
 
         public QuestionnaireData GetfontinputQuestionnaire(int ID)
         {
-           
-
             string connStr = ConfigString.GetConfigString();
             string commandText =
                             $@"
@@ -428,5 +426,13 @@ namespace Questionnaire.Managers
                 throw;
             }
         }
+
+
+
+
+
+
+
+
     }
 }

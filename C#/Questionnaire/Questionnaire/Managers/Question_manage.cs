@@ -112,14 +112,58 @@ namespace Questionnaire.Managers
             }
         }
 
-        public void updateQuestion(int ID, string answer)
+
+        //===================================================================================
+
+        public void insertPersonalinfo(int QuestionnaireID, string Name, int Age, int Phone, string Email, DateTime Date, out int PersonalinfoID)
         {
             string connStr = ConfigString.GetConfigString();
             string commandText = @"
-                                    UPDATE Question
-                                    SET
-                                        answer = @answer
-                                    WHERE ID = @ID
+                                   INSERT INTO Personalinfo
+                                        (QuestionnaireID, Name, Age, Phone, Email, Date)
+                                    VALUES
+                                        (@QuestionnaireID, @Name, @Age, @Phone, @Email, @Date)
+                                ";
+            string commandMaxIDText =
+            $@"
+                SELECT MAX(ID) FROM Personalinfo
+            ";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        connection.Open();
+                        command.Parameters.AddWithValue("@QuestionnaireID", QuestionnaireID);
+                        command.Parameters.AddWithValue("@Name", Name);
+                        command.Parameters.AddWithValue("@Age", Age);
+                        command.Parameters.AddWithValue("@Phone", Phone);
+                        command.Parameters.AddWithValue("@Email", Email);
+                        command.Parameters.AddWithValue("@Date", Date);
+
+                        command.ExecuteNonQuery();
+
+                        command.CommandText = commandMaxIDText;
+                        PersonalinfoID = (int)command.ExecuteScalar();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        public void insertAnswer(int PersonalinfoID, int QuestionID, string Answer, DateTime Date)
+        {
+            string connStr = ConfigString.GetConfigString();
+            string commandText = @"
+                                   INSERT INTO Answer
+                                        (PersonalinfoID, QuestionID, Answer, Date)
+                                    VALUES
+                                        (@PersonalinfoID, @QuestionID, @Answer, @Date)
                                 ";
             try
             {
@@ -128,8 +172,10 @@ namespace Questionnaire.Managers
                     using (SqlCommand command = new SqlCommand(commandText, connection))
                     {
                         connection.Open();
-                        command.Parameters.AddWithValue("@ID", ID);
-                        command.Parameters.AddWithValue("@answer", answer);
+                        command.Parameters.AddWithValue("@PersonalinfoID", PersonalinfoID);
+                        command.Parameters.AddWithValue("@QuestionID", QuestionID);
+                        command.Parameters.AddWithValue("@Answer", Answer);
+                        command.Parameters.AddWithValue("@Date", Date);
 
                         command.ExecuteNonQuery();
                     }
@@ -140,6 +186,8 @@ namespace Questionnaire.Managers
                 throw;
             }
         }
+
+
 
 
     }

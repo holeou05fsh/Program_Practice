@@ -105,8 +105,10 @@
     </Compile>
     <Compile Include="Managers\Questionnaire_manage.cs" />
     <Compile Include="Managers\Question_manage.cs" />
+    <Compile Include="Managers\Statistics_manage.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionnaireData.cs" />
+    <Compile Include="Models\StatisticsData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShareControls\ucPagination.ascx.cs">
       <DependentUpon>ucPagination.ascx</DependentUpon>

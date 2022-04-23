@@ -14,6 +14,7 @@ namespace Questionnaire
     {
         private Questionnaire_manage _qtmgr = new Questionnaire_manage();
         private Question_manage _qmgr = new Question_manage();
+        private Statistics_manage _Smgr = new Statistics_manage();
 
         protected void Page_init(object sender, EventArgs e)
         {
@@ -39,6 +40,48 @@ namespace Questionnaire
             }
             else if (Request.QueryString["page"] == "3")
             {
+                List<Question> QuestionData = _Smgr.GetmanageQuestion((int)QSID, 1);
+                List<StatisticsData> StatisticsDatas = _Smgr.GetStatistics((int)QSID, 1);
+                this.Literal5.Text = QuestionData[1].Title;
+                string[] answerlist = QuestionData[1].Answer.Split(';');  //  12~15;16~18;19~22;23~30;30~40
+
+
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+
+                int totalcount = 0;
+                foreach (StatisticsData StatisticsData in StatisticsDatas)
+                {
+                    if (StatisticsData.Answer == "年齡")
+                    {
+                        dic.Add(StatisticsData.Answer, StatisticsData.Count.ToString()); //19~22:1
+                        totalcount += StatisticsData.Count;
+                    }
+                }
+
+
+                foreach (string answer in answerlist) //  12~15;16~18;19~22;23~30;30~40
+                {
+                    if (dic.ContainsKey(answer))  //19~22:1
+                    {
+                        string ratio = ((100 / totalcount) * Convert.ToInt32(dic[answer])).ToString() + "%";
+                        dic[answer] = ratio;
+                    }
+                    else
+                    {
+                        dic.Add(answer, "0%");
+                    }
+                }
+                //做2次repleater
+                //1次
+                //年齡
+                
+                //2次
+                //12~15, 0 %
+                //16~18, 0 %
+                //19~22, 33 %
+                //23~30, 66 %
+                //30~40, 0 %
+
                 this.PlaceHolder1.Visible = false;
                 this.PlaceHolder2.Visible = false;
                 this.PlaceHolder3.Visible = true;
@@ -271,22 +314,33 @@ namespace Questionnaire
 
         protected void btnSure2_Click(object sender, EventArgs e)
         {
+            int PersonalinfoID = 0;
 
             int QSID = Convert.ToInt32(Request.QueryString["ID"]);
             List<Question> questions = _qmgr.GetmanageQuestion(QSID);
             foreach (Question question in questions)
             {
+                int QuestionID = question.ID;
                 string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
-                string QTypeID = QTypecontrol + ;
-                int ID = question.ID;
+                string QTypeID = QTypecontrol + QuestionID;
 
                 string updatedata = this.Session[QTypeID].ToString();
                 if (updatedata != "NO")
-                    _qmgr.updateQuestion(ID, updatedata);
+                {
+                    int QuestionnaireID = Convert.ToInt32(Request.QueryString["ID"]);
+                    string[] info = this.Session["info"].ToString().Split(',');
 
+                    string Name = info[0];
+                    int Phone = Convert.ToInt32(info[1]);
+                    string Email = info[2];
+                    int Age = Convert.ToInt32(info[3]);
+                    DateTime Date = Convert.ToDateTime(DateTime.Now.ToString());
+                    if (PersonalinfoID == 0)
+                        _qmgr.insertPersonalinfo(QuestionnaireID, Name, Age, Phone, Email, Date, out PersonalinfoID);
 
+                    _qmgr.insertAnswer(PersonalinfoID, QuestionID, updatedata, Date);
+                }
             }
-
 
             string qsID = Request.QueryString["ID"];
             Response.Redirect("/fontinput.aspx?ID=" + qsID + "&page=3");

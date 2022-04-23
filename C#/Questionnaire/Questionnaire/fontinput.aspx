@@ -143,7 +143,9 @@
             <div class="Questionnaire-input">
                 <div class="input-radio">
                     <ol>
-                        <li>請投給以下一位</li>
+                        <li><%--請投給以下一位--%>
+                            <asp:Literal ID="Literal5" runat="server"></asp:Literal>
+                        </li>
                     </ol>
 
                     <p class="input-answer">核廢料(dsfdsf)</p>

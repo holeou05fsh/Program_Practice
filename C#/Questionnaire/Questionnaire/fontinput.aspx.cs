@@ -15,6 +15,9 @@ namespace Questionnaire
         private Questionnaire_manage _qtmgr = new Questionnaire_manage();
         private Question_manage _qmgr = new Question_manage();
         private Statistics_manage _Smgr = new Statistics_manage();
+        int Questionnum = 0;
+        int QuestionnumTwo = 0;
+
 
         protected void Page_init(object sender, EventArgs e)
         {
@@ -41,46 +44,20 @@ namespace Questionnaire
             else if (Request.QueryString["page"] == "3")
             {
                 List<Question> QuestionData = _Smgr.GetmanageQuestion((int)QSID, 1);
-                List<StatisticsData> StatisticsDatas = _Smgr.GetStatistics((int)QSID, 1);
-                this.Literal5.Text = QuestionData[1].Title;
-                string[] answerlist = QuestionData[1].Answer.Split(';');  //  12~15;16~18;19~22;23~30;30~40
+                List<Question> QuestionData2 = _Smgr.GetmanageQuestion((int)QSID, 2);
 
 
-                Dictionary<string, string> dic = new Dictionary<string, string>();
-
-                int totalcount = 0;
-                foreach (StatisticsData StatisticsData in StatisticsDatas)
-                {
-                    if (StatisticsData.Answer == "年齡")
-                    {
-                        dic.Add(StatisticsData.Answer, StatisticsData.Count.ToString()); //19~22:1
-                        totalcount += StatisticsData.Count;
-                    }
-                }
+                this.Repeater1.DataSource = QuestionData;
+                this.Repeater1.DataBind();
 
 
-                foreach (string answer in answerlist) //  12~15;16~18;19~22;23~30;30~40
-                {
-                    if (dic.ContainsKey(answer))  //19~22:1
-                    {
-                        string ratio = ((100 / totalcount) * Convert.ToInt32(dic[answer])).ToString() + "%";
-                        dic[answer] = ratio;
-                    }
-                    else
-                    {
-                        dic.Add(answer, "0%");
-                    }
-                }
-                //做2次repleater
-                //1次
-                //年齡
+                this.Repeater3.DataSource = QuestionData2;
+                this.Repeater3.DataBind();
+
+
+
                 
-                //2次
-                //12~15, 0 %
-                //16~18, 0 %
-                //19~22, 33 %
-                //23~30, 66 %
-                //30~40, 0 %
+
 
                 this.PlaceHolder1.Visible = false;
                 this.PlaceHolder2.Visible = false;
@@ -135,7 +112,7 @@ namespace Questionnaire
                 this.TextBox2.Text = info[1];
                 this.TextBox3.Text = info[2];
                 this.TextBox4.Text = info[3];
-                
+
                 this.Literal1.Text = info[0];
                 this.Literal2.Text = info[1];
                 this.Literal3.Text = info[2];
@@ -417,7 +394,7 @@ namespace Questionnaire
             CheckBoxList cblist = new CheckBoxList();
             cblist.ID = "cbl" + ID;
             cblist.CssClass = "input-radioo";
-            
+
 
             for (int j = 0; j < answers.Length; j++)
             {
@@ -487,11 +464,156 @@ namespace Questionnaire
             txt.CssClass = "input-txtinput";
             txt.Text = writedQusetionnaire;
 
-            if (writedPage==1)
+            if (writedPage == 1)
                 txt.ReadOnly = true;
 
             this.form1.Controls.Add(txt);
         }
 
+
+
+        protected void Repeater1_OnItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
+
+            List<Question> QuestionData = _Smgr.GetmanageQuestion((int)QSID, 1);
+
+            int numquestion = QuestionData[Questionnum].ID;
+            List<StatisticsData> StatisticsDatas = _Smgr.GetStatistics((int)QSID, 1, numquestion);
+
+            string[] answerlist = QuestionData[Questionnum].Answer.Split(';');  //12~15;16~18;19~22;23~30;30~40
+
+            List<StatisticsData> StatisticShows = new List<StatisticsData>();
+
+            foreach (string answer in answerlist)
+            {
+                StatisticsData StatisticShow = new StatisticsData()
+                {
+                    S_ID = QuestionData[Questionnum].QuestionnaireID,
+                    S_Title = QuestionData[Questionnum].Title,
+                    S_Answer = answer,
+                };
+                StatisticShows.Add(StatisticShow);
+            }
+
+
+            int totalcount = 0;
+            foreach (StatisticsData StatisticsData in StatisticsDatas)
+            {
+                foreach (StatisticsData answerdataplus in StatisticShows)
+                {
+                    if (StatisticsData.Answer == answerdataplus.S_Answer)
+                    {
+                        //{19~22:1}
+                        answerdataplus.S_Answer = StatisticsData.Answer;
+                        answerdataplus.S_Count = StatisticsData.Count.ToString();
+                        totalcount += StatisticsData.Count;
+                    }
+                }
+            }
+
+
+            foreach (StatisticsData answerdataplus in StatisticShows)
+            {
+                string answercount = answerdataplus.S_Count; //12~15;16~18;19~22;23~30;30~40
+
+                if (answercount != null)  //19~22:1
+                {
+                    string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count) + 1).ToString() + "%";
+                    answerdataplus.S_Rate = ratio;
+                }
+                else
+                {
+                    answerdataplus.S_Rate = "0%";
+                    answerdataplus.S_Count = "0";
+                }
+            }
+
+            if (e.Item.ItemType == ListItemType.Item ||
+               e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Repeater rptSubsection = e.Item.FindControl("Repeater2") as Repeater;
+                rptSubsection.DataSource = StatisticShows;
+                rptSubsection.DataBind();
+                Questionnum += 1;
+            }
+
+        }
+
+        protected void Repeater3_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
+
+            List<Question> QuestionData2 = _Smgr.GetmanageQuestion((int)QSID, 2);
+
+            int numquestion = QuestionData2[QuestionnumTwo].ID;
+            List<StatisticsData> StatisticsDatas = _Smgr.GetStatisticsTwo((int)QSID, 2, numquestion);
+
+            string[] answerlist = QuestionData2[QuestionnumTwo].Answer.Split(';');
+            //活存/定存;儲蓄險;外幣存款;債券;ETF;信託基金;股票;房地產;外匯;虛擬貨幣
+
+            List<StatisticsData> StatisticShows = new List<StatisticsData>();
+
+            foreach (string answer in answerlist)
+            {
+                StatisticsData StatisticShow = new StatisticsData()
+                {
+                    S_ID = QuestionData2[QuestionnumTwo].ID,
+                    S_Title = QuestionData2[QuestionnumTwo].Title,
+                    S_Answer = answer,
+                    S_Count = "0",
+                };
+                StatisticShows.Add(StatisticShow);
+            }
+
+            int totalcount = 0;
+            foreach (StatisticsData StatisticsData in StatisticsDatas) //SQL
+            {
+                string[] datas = StatisticsData.Answer.Split(',');
+
+                foreach (string data in datas)
+                {
+                    foreach (StatisticsData StatisticShow in StatisticShows)
+                    {
+                        if (data == StatisticShow.S_Answer)
+                        {
+                            int scount = Convert.ToInt32(StatisticShow.S_Count);
+                            StatisticShow.S_Count = (scount + 1).ToString();
+                            totalcount += 1;
+                        }
+                    }
+                }
+                
+            }
+
+
+            foreach (StatisticsData answerdataplus in StatisticShows)
+            {
+                string answercount = answerdataplus.S_Count; 
+
+                if (answercount!="0")  
+                {
+                    string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count)).ToString() + "%";
+                    answerdataplus.S_Rate = ratio;
+                }
+                else
+                {
+                    answerdataplus.S_Rate = "0%";
+                    answerdataplus.S_Count = "0";
+                }
+            }
+
+
+
+            if (e.Item.ItemType == ListItemType.Item ||
+   e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Repeater rptSubsection = e.Item.FindControl("Repeater4") as Repeater;
+                rptSubsection.DataSource = StatisticShows;
+                rptSubsection.DataBind();
+                QuestionnumTwo += 1;
+            }
+
+        }
     }
 }

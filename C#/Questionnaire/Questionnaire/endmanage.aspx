@@ -81,6 +81,18 @@
                             <div class="questioninput">
                                 <table>
                                     <tr>
+                                        <th>*BUG:</th>
+                                        <td>填寫過問卷的，如果在這又修改的話，寫過問卷就對不到ID!</td>
+                                    </tr>
+                                    <tr>
+                                        <th>*解決:</th>
+                                        <td>按送出後，把回答一樣ID的改成新ID即可(但有點懶就這樣吧)</td>
+                                    </tr>
+                                     <tr>
+                                         <th><hr /></th>
+                                        <td><hr /></td>
+                                    </tr>
+                                    <tr>
                                         <th>種類</th>
                                         <td>
                                             <asp:DropDownList ID="DropDownList1" runat="server">

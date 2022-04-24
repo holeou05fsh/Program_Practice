@@ -72,7 +72,7 @@
                     </table>
 
                     <div class="input-button">
-                            <asp:Literal ID="litmsg" runat="server"></asp:Literal>
+                        <asp:Literal ID="litmsg" runat="server"></asp:Literal>
                         <h3>
                             <asp:Literal ID="litqustioncount" runat="server"></asp:Literal>
                         </h3>
@@ -130,46 +130,81 @@
                     </table>
 
                     <div class="input-button">
-                <asp:Button ID="btnCancel2" runat="server" Text="取消" OnClick="btnCancel2_Click" />
-                <asp:Button ID="btnSure2" runat="server" Text="確定" OnClick="btnSure2_Click" />
-            </div>
+                        <asp:Button ID="btnCancel2" runat="server" Text="取消" OnClick="btnCancel2_Click" />
+                        <asp:Button ID="btnSure2" runat="server" Text="確定" OnClick="btnSure2_Click" />
+                    </div>
                 </div>
-                
+
             </div>
-            
+
         </asp:PlaceHolder>
 
         <asp:PlaceHolder ID="PlaceHolder3" runat="server" Visible="false">
             <div class="Questionnaire-input">
                 <div class="input-radio">
-                    <ol>
-                        <li><%--請投給以下一位--%>
-                            <asp:Literal ID="Literal5" runat="server"></asp:Literal>
-                        </li>
-                    </ol>
+                    <h1>單選方塊</h1>
+                    <hr/>
+                    <asp:Repeater ID="Repeater1" runat="server" OnItemDataBound="Repeater1_OnItemDataBound">
+                        <ItemTemplate>
+                            <h3>
+                                <%# Eval("Title") %>
+                            </h3>
 
-                    <p class="input-answer">核廢料(dsfdsf)</p>
-                    <div class="input-show">
-                        <div class="input-barchart" style="width: 60%;">
-                            <p>60%  (3245人)</p>
-                        </div>
-                    </div>
+                            <asp:Repeater ID="Repeater2" runat="server" >
+                        <ItemTemplate>
+                            <p class="input-answer"><%# Eval("S_Answer") %></p>
+                            <div class="input-show">
 
-                    <p class="input-answer">核廢料(dsfdsf)</p>
+                                <div class="input-barchart" style="width: <%#Eval("S_Rate") %>;">
+                                    <p><%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
+                                </div>
 
-                    <div class="input-show">
-                        <div class="input-barchart" style="width: 40%;">
-                            <p>40%  (245人)</p>
-                        </div>
-                    </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
 
-                    <p class="input-answer">核廢料(dsfdsf)</p>
-                    <div class="input-show">
-                        <div class="input-barchart" style="width: 0%;">
-                            <p>0%  (0人)</p>
-                        </div>
-                    </div>
+                        </ItemTemplate>
+                        
+                                <SeparatorTemplate>
+                                    <hr />
+                                </SeparatorTemplate>
+                    </asp:Repeater>
+
                 </div>
+
+                <br/> <br/> <br/> <br/> <br/> <br/>
+                <div class="input-radio">
+                    <h1>複選方塊</h1>
+                    <hr/>
+                    <asp:Repeater ID="Repeater3" runat="server"  OnItemDataBound="Repeater3_ItemDataBound">
+                        <ItemTemplate>
+                            <h3>
+                                <%# Eval("Title") %>
+                            </h3>
+
+                             <asp:Repeater ID="Repeater4" runat="server" >
+                        <ItemTemplate>
+                            <p class="input-answer"><%# Eval("S_Answer") %></p>
+                            <div class="input-show">
+
+                                <div class="input-barchart" style="width: <%#Eval("S_Rate") %>;">
+                                    <p><%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
+                                </div>
+
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                        </ItemTemplate>
+                        
+                                <SeparatorTemplate>
+                                    <hr />
+                                </SeparatorTemplate>
+                    </asp:Repeater>
+
+                </div>
+
+
                 <div class="input-button">
                     <asp:Button ID="btnSure3" runat="server" Text="確定" OnClick="btnSure3_Click" />
                 </div>

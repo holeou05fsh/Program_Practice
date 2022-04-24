@@ -158,10 +158,11 @@
     margin-top: 50px;
 }
 
-.input-radio ol {
-    margin: 15px 0px 5px 0px;
-    font-size: 16px;
-}
+    .input-radio h1 {
+        text-align: center;
+        font-size: 40px;
+        color:red;
+    }
 
         .input-radio #rdoinput, .input-answer {
             margin-left: 32px;

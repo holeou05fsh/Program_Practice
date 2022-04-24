@@ -80,15 +80,15 @@ namespace Questionnaire
                     }
                     else
                     {
-                        this.TextBox5.Text = sessiondata[1];
-                        this.TextBox7.Text = sessiondata[2];
-                        if (sessiondata[3] == "1")
+                        this.TextBox5.Text = sessiondata[2];
+                        this.TextBox7.Text = sessiondata[3];
+                        if (sessiondata[4] == "1")
                             this.DropDownList2.SelectedValue = "單選方塊";
-                        else if (sessiondata[3] == "2")
+                        else if (sessiondata[4] == "2")
                             this.DropDownList2.SelectedValue = "複選方塊";
                         else
                             this.DropDownList2.SelectedValue = "文字";
-                        if (sessiondata[4] == "True")
+                        if (sessiondata[5] == "True")
                             this.CheckBox1.Checked = true;
 
                         sessiondata[6] = "0";

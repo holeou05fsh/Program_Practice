@@ -46,122 +46,19 @@ namespace Questionnaire
                 List<Question> QuestionData = _Smgr.GetmanageQuestion((int)QSID, 1);
                 List<Question> QuestionData2 = _Smgr.GetmanageQuestion((int)QSID, 2);
 
-
                 this.Repeater1.DataSource = QuestionData;
                 this.Repeater1.DataBind();
 
-
                 this.Repeater3.DataSource = QuestionData2;
                 this.Repeater3.DataBind();
-
-
-
-                
-
 
                 this.PlaceHolder1.Visible = false;
                 this.PlaceHolder2.Visible = false;
                 this.PlaceHolder3.Visible = true;
             }
-
-
         }
 
-        private void QuestionnaireMarker(List<Question> questions, int writedPage)
-        {
-            bool writed = false; //判斷有沒有填寫過
-            int count = 1;
-            foreach (Question question in questions)
-            {
-                string num = count + ". ";
-                int ID = question.ID;
-                string title = question.Title;
-                string answertotal = question.Answer;
-                int QType = question.QType;
-                bool Required = question.Required;
 
-                if (Required)
-                    num = "*" + count + ". ";
-
-                //判斷Session有值就代表已經寫過
-                string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
-                string QTypeID = QTypecontrol + question.ID;
-                if (this.Session[QTypeID] != null)
-                {
-                    writed = true;
-                    break;
-                }
-                else  //未填寫過了
-                {
-                    if (QType == 1)
-                        RadioButtonListcreate(num, ID, title, answertotal, writedPage);
-                    else if (QType == 2)
-                        CheckBoxListcreate(num, ID, title, answertotal, writedPage);
-                    else
-                        TextBoxcreate(num, ID, title, writedPage);
-                    count += 1;
-                }
-            }
-
-            //已經填寫過了
-            if (writed)
-            {
-                string[] info = this.Session["info"].ToString().Split(',');
-
-                this.TextBox1.Text = info[0];
-                this.TextBox2.Text = info[1];
-                this.TextBox3.Text = info[2];
-                this.TextBox4.Text = info[3];
-
-                this.Literal1.Text = info[0];
-                this.Literal2.Text = info[1];
-                this.Literal3.Text = info[2];
-                this.Literal4.Text = info[3];
-
-                foreach (Question question in questions)
-                {
-                    string num = count + ". ";
-                    int ID = question.ID;
-                    string title = question.Title;
-                    string answertotal = question.Answer;
-                    int QType = question.QType;
-                    bool Required = question.Required;
-
-                    if (Required)
-                        num = "*" + count + ". ";
-
-                    string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
-                    string QTypeID = QTypecontrol + question.ID;
-
-                    string writedQusetionnaire = this.Session[QTypeID].ToString();
-
-
-                    if (writedQusetionnaire == "NO")
-                    {
-                        if (QType == 1)
-                            RadioButtonListcreate(num, ID, title, answertotal, writedPage);
-                        else if (QType == 2)
-                            CheckBoxListcreate(num, ID, title, answertotal, writedPage);
-                        else
-                            TextBoxcreate(num, ID, title, writedPage);
-                        count += 1;
-                    }
-                    else
-                    {
-                        if (QType == 1)
-                            RadioButtonListwrited(num, ID, title, answertotal, writedQusetionnaire, writedPage);
-                        else if (QType == 2)
-                            CheckBoxListwrited(num, ID, title, answertotal, writedQusetionnaire, writedPage);
-                        else
-                            TextBoxwrited(num, ID, title, writedQusetionnaire, writedPage);
-                        count += 1;
-                    }
-
-                }
-            }
-
-            this.litqustioncount.Text = $"共{count - 1}個問題";
-        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -175,8 +72,6 @@ namespace Questionnaire
                 this.lilDescribe.Text = FontinputquestionnaireData.Describe;
                 this.lilTitle.Text = FontinputquestionnaireData.Title;
             }
-
-
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
@@ -329,6 +224,106 @@ namespace Questionnaire
         }
 
 
+        //======================▼這裡後臺填寫問捲也要用到，可抽成方法(但懶惰我就用複製的了)============================
+
+        private void QuestionnaireMarker(List<Question> questions, int writedPage)
+        {
+            bool writed = false; //判斷有沒有填寫過
+            int count = 1;
+            foreach (Question question in questions)
+            {
+                string num = count + ". ";
+                int ID = question.ID;
+                string title = question.Title;
+                string answertotal = question.Answer;
+                int QType = question.QType;
+                bool Required = question.Required;
+
+                if (Required)
+                    num = "*" + count + ". ";
+
+                //判斷Session有值就代表已經寫過
+                string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
+                string QTypeID = QTypecontrol + question.ID;
+                if (this.Session[QTypeID] != null)
+                {
+                    writed = true;
+                    break;
+                }
+                else  //未填寫過了
+                {
+                    if (QType == 1)
+                        RadioButtonListcreate(num, ID, title, answertotal, writedPage);
+                    else if (QType == 2)
+                        CheckBoxListcreate(num, ID, title, answertotal, writedPage);
+                    else
+                        TextBoxcreate(num, ID, title, writedPage);
+                    count += 1;
+                }
+            }
+
+            //已經填寫過了
+            if (writed)
+            {
+                string[] info = this.Session["info"].ToString().Split(',');
+
+                this.TextBox1.Text = info[0];
+                this.TextBox2.Text = info[1];
+                this.TextBox3.Text = info[2];
+                this.TextBox4.Text = info[3];
+
+                this.Literal1.Text = info[0];
+                this.Literal2.Text = info[1];
+                this.Literal3.Text = info[2];
+                this.Literal4.Text = info[3];
+
+                foreach (Question question in questions)
+                {
+                    string num = count + ". ";
+                    int ID = question.ID;
+                    string title = question.Title;
+                    string answertotal = question.Answer;
+                    int QType = question.QType;
+                    bool Required = question.Required;
+
+                    if (Required)
+                        num = "*" + count + ". ";
+
+                    string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
+                    string QTypeID = QTypecontrol + question.ID;
+
+                    string writedQusetionnaire = this.Session[QTypeID].ToString();
+
+
+                    if (writedQusetionnaire == "NO")
+                    {
+                        if (QType == 1)
+                            RadioButtonListcreate(num, ID, title, answertotal, writedPage);
+                        else if (QType == 2)
+                            CheckBoxListcreate(num, ID, title, answertotal, writedPage);
+                        else
+                            TextBoxcreate(num, ID, title, writedPage);
+                        count += 1;
+                    }
+                    else
+                    {
+                        if (QType == 1)
+                            RadioButtonListwrited(num, ID, title, answertotal, writedQusetionnaire, writedPage);
+                        else if (QType == 2)
+                            CheckBoxListwrited(num, ID, title, answertotal, writedQusetionnaire, writedPage);
+                        else
+                            TextBoxwrited(num, ID, title, writedQusetionnaire, writedPage);
+                        count += 1;
+                    }
+
+                }
+            }
+
+            this.litqustioncount.Text = $"共{count - 1}個問題";
+        }
+
+
+
         private void RadioButtonListcreate(string num, int ID, string title, string answertotal, int writedPage)
         {
             Label lbl = new Label();
@@ -469,6 +464,7 @@ namespace Questionnaire
 
             this.form1.Controls.Add(txt);
         }
+        //======================▲這裡後臺填寫問捲也要用到，可抽成方法(但懶惰我就用複製的了)============================
 
 
 

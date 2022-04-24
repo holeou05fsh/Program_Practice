@@ -430,7 +430,136 @@ namespace Questionnaire.Managers
 
 
 
+        public List<AnswerData> GetBackPersonalinfos(int QuestionnaireID, int PageSize, int PageIndex, out int Pagetotal)
+        {
+            int skip = PageSize * (PageIndex - 1);  //計算跳頁數
+            if (skip < 0)
+                skip = 0;
 
+
+            string connStr = ConfigString.GetConfigString();
+            string commandText =
+                $@"
+                SELECT TOP {PageSize} *
+                FROM Personalinfo
+                JOIN 
+	                (
+	                SELECT
+		                ROW_NUMBER() OVER(ORDER BY ID asc)  AS 'Sort'
+		                , ID
+	                FROM Personalinfo
+	                ) AS Temp
+                on Temp.ID = Personalinfo.ID
+				WHERE QuestionnaireID = @QuestionnaireID AND Personalinfo.ID NOT IN 
+	                    (
+		                    SELECT TOP {skip} ID
+		                    FROM Personalinfo
+		                    WHERE QuestionnaireID = @QuestionnaireID
+		                    ORDER BY ID DESC
+	                    )
+
+                ORDER BY Personalinfo.ID DESC
+            ";
+
+            string commandCountText =
+            $@"
+                SELECT COUNT(ID) AS 'Count'
+                FROM Personalinfo
+                WHERE QuestionnaireID = @QuestionnaireID
+            ";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.Parameters.AddWithValue("@QuestionnaireID", QuestionnaireID);
+
+                        connection.Open();
+
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        List<AnswerData> AnswerDatas = new List<AnswerData>();
+                        while (reader.Read())
+                        {
+
+                            AnswerData questionnaireData = new AnswerData()
+                            {
+                                Sort = (Int64)reader["Sort"],
+                                ID = (int)reader["ID"],
+                                QuestionnaireID = (int)reader["QuestionnaireID"],
+                                Name = (string)reader["Name"],
+                                Age = (int)reader["Age"],
+                                Phone = (int)reader["Phone"],
+                                Email = (string)reader["Email"],
+                                Date = (DateTime)reader["Date"],
+                            };
+                            AnswerDatas.Add(questionnaireData);
+                        }
+                        reader.Close();
+                        //取得總筆數
+                        command.CommandText = commandCountText;
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@QuestionnaireID", QuestionnaireID);
+                        Pagetotal = (int)command.ExecuteScalar();
+                        return AnswerDatas;
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+
+        public AnswerData GetBackPersonalinfo(int ID)
+        {
+
+
+            string connStr = ConfigString.GetConfigString();
+            string commandText =
+                $@"
+                    SELECT  *
+                    FROM Personalinfo
+                    WHERE ID = @ID
+                ";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.Parameters.AddWithValue("@ID", ID);
+
+                        connection.Open();
+
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            AnswerData questionnaireData = new AnswerData()
+                            {
+                                ID = (int)reader["ID"],
+                                QuestionnaireID = (int)reader["QuestionnaireID"],
+                                Name = (string)reader["Name"],
+                                Age = (int)reader["Age"],
+                                Phone = (int)reader["Phone"],
+                                Email = (string)reader["Email"],
+                                Date = (DateTime)reader["Date"],
+                            };
+                            return questionnaireData;
+                        }
+                        return null;
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
 
 

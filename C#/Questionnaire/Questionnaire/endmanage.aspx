@@ -1,5 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="endmanage.aspx.cs" Inherits="Questionnaire.endmanage" %>
 
+<%@ Register Src="~/ShareControls/ucPagination.ascx" TagPrefix="uc1" TagName="ucPagination" %>
+
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -29,6 +32,7 @@
                     <span id="tab-2">頁面1</span>
                     <span id="tab-3">頁面2</span>
                     <span id="tab-4">頁面3</span>
+                    <span id="tab-5">頁面4</span>
 
                     <!-- 頁籤按鈕 -->
                     <div id="tab">
@@ -37,6 +41,7 @@
                             <li><a href="#tab-2">問題</a></li>
                             <li><a href="#tab-3">填寫資料</a></li>
                             <li><a href="#tab-4">統計</a></li>
+                            <li><a href="#tab-5">常用問題</a></li>
                         </ul>
 
                         <!-- 頁籤的內容區塊 -->
@@ -88,9 +93,13 @@
                                         <th>*解決:</th>
                                         <td>按送出後，把回答一樣ID的改成新ID即可(但有點懶就這樣吧)</td>
                                     </tr>
-                                     <tr>
-                                         <th><hr /></th>
-                                        <td><hr /></td>
+                                    <tr>
+                                        <th>
+                                            <hr />
+                                        </th>
+                                        <td>
+                                            <hr />
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>種類</th>
@@ -125,7 +134,7 @@
                                 </table>
                             </div>
                             <div class="questioninfo">
-                                <asp:Button ID="btndelete" runat="server" Text="🗑" onclick="btndelete_Click" />
+                                <asp:Button ID="btndelete" runat="server" Text="🗑" OnClick="btndelete_Click" />
                                 <table class="questionshow">
                                     <tr>
                                         <th></th>
@@ -145,32 +154,21 @@
                                                 <td><%# Eval("Title") %></td>
                                                 <td><%# Convert.ToInt32(Eval("QType"))==1?"單選方塊":Convert.ToInt32(Eval("QType"))==2?"複選方塊":"文字" %></td>
                                                 <td>
-                                                    <asp:CheckBox ID="CheckBox3" runat="server" checked='<%# (bool)Eval("required") %>' onclick="javascript: return false;" />
+                                                    <asp:CheckBox ID="CheckBox3" runat="server" Checked='<%# (bool)Eval("required") %>' onclick="javascript: return false;" />
                                                 </td>
-                                                <td><asp:Button ID="btnedit" runat="server" Text="編輯"  CommandName='<%# "questionedit" + Eval("ID").ToString() %>' CommandArgument='<%#Eval("ID") %>' /></td>
+                                                <td>
+                                                    <asp:Button ID="btnedit" runat="server" Text="編輯" CommandName='<%# "questionedit" + Eval("ID").ToString() %>' CommandArgument='<%#Eval("ID") %>' /></td>
                                             </tr>
                                         </ItemTemplate>
                                     </asp:Repeater>
 
-                                    <%--<tr>
-                                        <td>
-                                            <asp:CheckBox ID="CheckBox4" runat="server" />
-                                        </td>
-                                        <td>1</td>
-                                        <td>測試文字方塊(必填欄位)</td>
-                                        <td>文字</td>
-                                        <td>
-                                            <asp:CheckBox ID="CheckBox5" runat="server" />
-                                        </td>
-                                        <td>編輯</td>
-                                    </tr>--%>
                                 </table>
                                 <div class="input-button">
-                                    <asp:Button ID="btnCancel2" runat="server" Text="取消" onclick="btnCancel2_Click"/>
-                                    <asp:Button ID="btnSure2" runat="server" Text="送出" onclick="btnSure2_Click" />
+                                    <asp:Button ID="btnCancel2" runat="server" Text="取消" OnClick="btnCancel2_Click" />
+                                    <asp:Button ID="btnSure2" runat="server" Text="送出" OnClick="btnSure2_Click" />
                                 </div>
                             </div>
-                                <asp:Literal ID="litmsgSureT" runat="server"></asp:Literal>
+                            <asp:Literal ID="litmsgSureT" runat="server"></asp:Literal>
                         </div>
 
                         <div class="tab-content-3">
@@ -178,30 +176,29 @@
                                 <asp:Button ID="inputCSV" runat="server" Text="匯出" />
                                 <table class="questionshow">
                                     <tr>
-                                        <th>問卷</th>
-                                        <th>問題</th>
+                                        <th>#</th>
+                                        <th>姓名</th>
                                         <th>填寫時間</th>
                                         <th>觀看細節</th>
                                     </tr>
-                                    <tr>
-                                        <td>21</td>
-                                        <td>陳笑笑</td>
-                                        <td>2021/10/10 21:00</td>
-                                        <td>
-                                            <a href="#tab-3">
-                                                <asp:Button ID="btninfo" runat="server" Text="前往" OnClick="btninfo_Click" /></a>
-                                        </td>
-                                    </tr>
+
+                                    <asp:Repeater ID="Repeater2" runat="server" OnItemCommand="Repeater2_ItemCommand">
+                                        <ItemTemplate>
+                                            <tr>
+                                                <td><%# Eval("Sort") %></td>
+                                                <td><%# Eval("Name") %></td>
+                                                <td><%# Eval("Date") %></td>
+                                                <td>
+                                                    <asp:Button ID="btninfo" runat="server" Text="前往" CommandName="btnAnswer" CommandArgument='<%# Eval("ID") %>' />
+                                                </td>
+                                            </tr>
+
+                                        </ItemTemplate>
+                                    </asp:Repeater>
+
                                 </table>
-                                <div class="pagination">
-                                    <a href="#">«</a>
-                                    <a href="#">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">4</a>
-                                    <a href="#">5</a>
-                                    <a href="#">»</a>
-                                </div>
+                                <uc1:ucPagination runat="server" ID="ucPagination" />
+
 
                             </asp:PlaceHolder>
                             <asp:PlaceHolder ID="PlaceHolder2" runat="server" Visible="false">
@@ -231,48 +228,18 @@
                                         <td></td>
                                         <td></td>
                                         <td colspan="2">
-                                            <p>填寫時間  2021/10/11 21:00:23</p>
+                                            <p>
+                                                <asp:Literal ID="Literal1" runat="server"></asp:Literal>
+                                            </p>
                                         </td>
                                     </tr>
                                 </table>
 
-                                <table class="infotext">
-                                    <tr>
-                                        <td>1. 測試文字方塊(必填欄位)</td>
-                                        <td>2. 測試文字方塊
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <asp:TextBox ID="TextBox11" runat="server"></asp:TextBox></td>
-                                        <td>
-                                            <asp:TextBox ID="TextBox12" runat="server"></asp:TextBox>
-                                        </td>
-                                    </tr>
+                                <asp:Literal ID="litqustioncount" runat="server"></asp:Literal>
 
-                                    <tr class="t3">
-                                        <td>3. 測試單選 (必填)</td>
-                                        <td>4. 測試複選 (必填)</td>
-                                    </tr>
 
-                                    <tr>
-                                        <td>
-                                            <asp:RadioButtonList ID="RadioButtonList1" runat="server">
-                                                <asp:ListItem>第一單選</asp:ListItem>
-                                                <asp:ListItem>第二單選</asp:ListItem>
-                                                <asp:ListItem>第三單選</asp:ListItem>
-                                            </asp:RadioButtonList>
-                                        </td>
+                                <asp:PlaceHolder ID="PlaceHolder3" runat="server"></asp:PlaceHolder>
 
-                                        <td>
-                                            <asp:CheckBoxList ID="CheckBoxList1" runat="server">
-                                                <asp:ListItem>第一複選</asp:ListItem>
-                                                <asp:ListItem>第二複選</asp:ListItem>
-                                                <asp:ListItem>第三複選</asp:ListItem>
-                                            </asp:CheckBoxList>
-                                        </td>
-                                    </tr>
-                                </table>
                                 <asp:Button ID="btnCancel3" runat="server" Text="取消" OnClick="btnCancel3_Click" />
                             </asp:PlaceHolder>
 
@@ -281,6 +248,11 @@
                         <div class="tab-content-4">
                             <p>頁面3顯示的內容</p>
                         </div>
+
+                        <div class="tab-content-5">
+                            <p>常用問題管理</p>
+                        </div>
+
 
                     </div>
 

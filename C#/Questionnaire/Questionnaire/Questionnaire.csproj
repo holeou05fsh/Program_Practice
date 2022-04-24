@@ -106,6 +106,7 @@
     <Compile Include="Managers\Questionnaire_manage.cs" />
     <Compile Include="Managers\Question_manage.cs" />
     <Compile Include="Managers\Statistics_manage.cs" />
+    <Compile Include="Models\AnswerData.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionnaireData.cs" />
     <Compile Include="Models\StatisticsData.cs" />

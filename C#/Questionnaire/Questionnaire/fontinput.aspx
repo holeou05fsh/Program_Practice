@@ -81,19 +81,6 @@
                     </div>
                 </div>
 
-                <%-- <div class="input-radio">
-                    <ol>
-                        <li>請投給以下一位</li>
-                    </ol>
-
-                    <asp:RadioButtonList ID="rdoinput" runat="server">
-                        <asp:ListItem>Item 1</asp:ListItem>
-                        <asp:ListItem>Item 2</asp:ListItem>
-                        <asp:ListItem>Item 3</asp:ListItem>
-                        <asp:ListItem>Item 4</asp:ListItem>
-                    </asp:RadioButtonList>
-
-                </div>--%>
             </div>
 
 

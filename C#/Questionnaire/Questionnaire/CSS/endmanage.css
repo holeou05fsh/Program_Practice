@@ -59,7 +59,8 @@ span ~ #tab > ul li:first-child a,
 #tab-1:target ~ #tab > ul li a[href$="#tab-1"],
 #tab-2:target ~ #tab > ul li a[href$="#tab-2"],
 #tab-3:target ~ #tab > ul li a[href$="#tab-3"],
-#tab-4:target ~ #tab > ul li a[href$="#tab-4"] {
+#tab-4:target ~ #tab > ul li a[href$="#tab-4"],
+#tab-5:target ~ #tab > ul li a[href$="#tab-5"] {
     background: #fff;
     border-radius: 5px 5px 0 0;
 }
@@ -68,7 +69,8 @@ span ~ #tab > ul li:first-child a,
     #tab-1:target ~ #tab > ul li a[href$="#tab-1"]::before,
     #tab-2:target ~ #tab > ul li a[href$="#tab-2"]::before,
     #tab-3:target ~ #tab > ul li a[href$="#tab-3"]::before,
-    #tab-4:target ~ #tab > ul li a[href$="#tab-4"]::before {
+    #tab-4:target ~ #tab > ul li a[href$="#tab-4"]::before,
+    #tab-5:target ~ #tab > ul li a[href$="#tab-5"]::before {
         background-color: white;
         height: 100%;
     }
@@ -78,7 +80,8 @@ span ~ #tab > div:first-of-type,
 #tab-1:target ~ #tab > div.tab-content-1,
 #tab-2:target ~ #tab > div.tab-content-2,
 #tab-3:target ~ #tab > div.tab-content-3,
-#tab-4:target ~ #tab > div.tab-content-4 {
+#tab-4:target ~ #tab > div.tab-content-4,
+#tab-5:target ~ #tab > div.tab-content-5 {
     visibility: visible;
     height: auto;
     background: #fff;
@@ -273,7 +276,7 @@ span {
 }
 
     .infotext table tr td:first-child {
-        width: 260px;
+        width: 200px;
     }
 
     .infotext .t3 {
@@ -295,3 +298,53 @@ span {
     color: red;
     font-size: 26px;
 }
+
+
+
+/*------------------------------------*/
+
+
+.input-title {
+    margin: auto;
+    font-size: 20px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    display: block;
+    width: 700px;
+}
+
+    .input-title p {
+        text-align: left;
+        margin-left: -20px;
+        margin-bottom: 0px;
+    }
+
+.input-radioo {
+    margin: auto;
+    width: 700px;
+}
+
+.input-txtinput {
+    margin: 0px auto;
+    /*margin-left:300px;*/
+    /*width: 200px;*/
+    text-align: center;
+}
+
+/*------------------------------------*/
+.input-radio {
+    margin-top: 50px;
+}
+
+    .input-radio h1 {
+        text-align: center;
+        font-size: 40px;
+        color: red;
+    }
+
+    .input-radio #rdoinput, .input-answer {
+        margin-left: 32px;
+    }
+
+
+/*===================================*/

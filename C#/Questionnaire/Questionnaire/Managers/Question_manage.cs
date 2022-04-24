@@ -189,6 +189,57 @@ namespace Questionnaire.Managers
 
 
 
+        //===================================================================================
+
+        public List<Question> GetmanageAnswer(int PersonalinfoID)
+        {
+            string connStr = ConfigString.GetConfigString();
+            string commandText =
+                @"
+                    select 
+	                    Answer.QuestionID
+	                    ,Answer.Answer
+	                    ,Question.QType
+                    from Answer
+
+                    join Question
+                    on Question.ID = Answer.QuestionID
+                    where PersonalinfoID= @PersonalinfoID;
+                ";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.Parameters.AddWithValue("@PersonalinfoID", PersonalinfoID);
+
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        List<Question> questionDatas = new List<Question>();
+
+                        while (reader.Read())
+                        {
+                            Question questionData = new Question()
+                            {
+                                QuestionID = (int)reader["QuestionID"],
+                                Answer = (string)reader["Answer"],
+                                QType = (int)reader["QType"],
+                            };
+                            questionDatas.Add(questionData);
+                        }
+
+                        return questionDatas;
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
 
     }
 }

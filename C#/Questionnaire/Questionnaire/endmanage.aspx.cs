@@ -20,11 +20,86 @@ namespace Questionnaire
             "joinsession9", "joinsession10", "joinsession11", "joinsession12",
         };
 
+        protected void Page_Init(object sender, EventArgs e)
+        {
+
+            //=========================== Tag-3 ===============================
+            int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
+
+
+            if (QSID != null && QSID != 0)
+            {
+                if (Convert.ToInt32(Session["questionshow"]) != 1)
+                {
+                    int Pagetotal = 0;
+                    int PageSize = 4;
+                    int? Pageindex = Convert.ToInt32(Request.QueryString["Page"]);
+                    if (Pageindex == null || Pageindex <= 1)
+                        Pageindex = 1;
+                    List<AnswerData> BackAnswer = _qtmgr.GetBackPersonalinfos((int)QSID, PageSize, (int)Pageindex, out Pagetotal);
+                    this.Repeater2.DataSource = BackAnswer;
+                    this.Repeater2.DataBind();
+
+                    string atagurl = Request.RawUrl;
+
+                    for (int i=0; i < Pagetotal; i++)
+                    {
+                        if (atagurl.Contains($"&Page={i}"))
+                            atagurl = Request.RawUrl.Replace($"&Page={i}", "");
+                    }
+                    
+
+                    this.ucPagination.Url = atagurl;
+                    this.ucPagination.UrlID = "#tab-3";
+                    this.ucPagination.TotalRows = Pagetotal;
+                    this.ucPagination.PageIndex = (int)Pageindex;
+                    this.ucPagination.Bind();
+
+                    this.PlaceHolder1.Visible = true;
+                    this.PlaceHolder2.Visible = false;
+                }
+                else
+                {
+
+                    int answerID = Convert.ToInt32(this.Session["btnAnswer"]);
+
+                    AnswerData BackAnswer = _qtmgr.GetBackPersonalinfo(answerID);
+
+                    this.TextBox6.Text = BackAnswer.Name;
+                    this.TextBox8.Text = BackAnswer.Phone.ToString();
+                    this.TextBox9.Text = BackAnswer.Email;
+                    this.TextBox10.Text = BackAnswer.Age.ToString();
+                    this.Literal1.Text = "填寫時間  " + BackAnswer.Date.ToString();
+
+                    List<Question> questions = _qmgr.GetmanageQuestion((int)QSID);
+                    List<Question> questionsanswer = _qmgr.GetmanageAnswer(answerID);
+
+                    //判斷Session有值就代表已經寫過
+                    foreach (Question question in questionsanswer)
+                    {
+                        string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
+                        string QTypeID = QTypecontrol + question.QuestionID;
+                        this.Session[QTypeID] = question.Answer;
+                    }
+                    
+
+                    QuestionnaireMarker(questions, 1);
+
+                    
+
+                    this.PlaceHolder1.Visible = false;
+                    this.PlaceHolder2.Visible = true;
+                }
+            }
+        }
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 //=========================== Tag-1 ===============================
+
                 int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
                 if (QSID != null && QSID != 0)
                 {
@@ -37,11 +112,9 @@ namespace Questionnaire
                         this.TextBox4.Text = Convert.ToDateTime(questionnaireData.EndTime.ToString()).ToString("yyyy-MM-dd");
                         this.chkopen.Checked = questionnaireData.State;
                     }
-                    else
-                        Response.Redirect("https://c.tenor.com/rkm2Az4596oAAAAM/angry-baby-crypcorp.gif");
                 }
                 else
-                    this.TextBox3.Text = Convert.ToDateTime(DateTime.Now.ToString()).ToString("yyyy-MM-dd");
+                    Response.Redirect("https://c.tenor.com/rkm2Az4596oAAAAM/angry-baby-crypcorp.gif");
 
                 //=========================== Tag-2 ===============================
                 //紀錄:
@@ -156,32 +229,22 @@ namespace Questionnaire
                     this.Repeater1.DataSource = Questions;
                     this.Repeater1.DataBind();
 
-                    //=========================== Tag-3 ===============================
-                    if (Convert.ToInt32(Session["questionshow"]) != 1)
-                    {
-                        this.PlaceHolder1.Visible = true;
-                        this.PlaceHolder2.Visible = false;
-                    }
-                    else
-                    {
-                        this.PlaceHolder1.Visible = false;
-                        this.PlaceHolder2.Visible = true;
-                    }
                 }
-
             }
         }
+
+
         protected void btnCancel3_Click(object sender, EventArgs e)
         {
-            Session["questionshow"] = 0;
-            Response.Redirect("/endmanage.aspx#tab-3");
+            //btnCancel3 session應該是要全刪但有點懶惰，以後要在再說吧
+            Session.Abandon();
+            this.Session["questionshow"] = 0;
+            this.Session["btnAnswer"] = null;
+            
+            Response.Redirect(Request.RawUrl + "#tab-3");
         }
 
-        protected void btninfo_Click(object sender, EventArgs e)
-        {
-            Session["questionshow"] = 1;
-            Response.Redirect("/endmanage.aspx#tab-3");
-        }
+
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
@@ -472,7 +535,6 @@ namespace Questionnaire
 
             Response.Redirect(Request.RawUrl + "#tab-2");
 
-
         }
 
         protected void btnSure2_Click(object sender, EventArgs e)
@@ -484,7 +546,7 @@ namespace Questionnaire
             //QuestionnaireID, title, answer, qtype, required
             List<ArrayList> surechecks = SureCheck(2);
 
-            if (surechecks.Count !=0)
+            if (surechecks.Count != 0)
             {
                 _qmgr.delQuestion(Convert.ToInt32(surechecks[0][0]));
 
@@ -516,6 +578,255 @@ namespace Questionnaire
             this.Session["litmsgSureT"] = null;
             Response.Redirect("/index.aspx/backindex");
 
+        }
+
+
+        //======================▼這裡前臺填寫問捲也要用到，可抽成方法(但懶惰我就用複製的了)============================
+
+        private void QuestionnaireMarker(List<Question> questions, int writedPage)
+        {
+            bool writed = false; //判斷有沒有填寫過
+            int count = 1;
+            foreach (Question question in questions)
+            {
+                string num = count + ". ";
+                int ID = question.ID;
+                string title = question.Title;
+                string answertotal = question.Answer;
+                int QType = question.QType;
+                bool Required = question.Required;
+
+                if (Required)
+                    num = "*" + count + ". ";
+
+                //判斷Session有值就代表已經寫過
+                string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
+                string QTypeID = QTypecontrol + question.ID;
+                if (this.Session[QTypeID] != null)
+                {
+                    writed = true;
+                    break;
+                }
+                else  //未填寫過了
+                {
+                    if (QType == 1)
+                        RadioButtonListcreate(num, ID, title, answertotal, writedPage);
+                    else if (QType == 2)
+                        CheckBoxListcreate(num, ID, title, answertotal, writedPage);
+                    else
+                        TextBoxcreate(num, ID, title, writedPage);
+                    count += 1;
+                }
+            }
+
+            //已經填寫過了
+            if (writed)
+            {
+
+                foreach (Question question in questions)
+                {
+                    string num = count + ". ";
+                    int ID = question.ID;
+                    string title = question.Title;
+                    string answertotal = question.Answer;
+                    int QType = question.QType;
+                    bool Required = question.Required;
+
+                    if (Required)
+                        num = "*" + count + ". ";
+
+                    string QTypecontrol = question.QType == 1 ? "rdo" : question.QType == 2 ? "cbl" : "txt";
+                    string QTypeID = QTypecontrol + question.ID;
+
+
+                    string writedQusetionnaire = "NO";
+                    if (this.Session[QTypeID] != null)
+                    {
+                        writedQusetionnaire = this.Session[QTypeID].ToString();
+                    }
+
+
+                    if (writedQusetionnaire == "NO")
+                    {
+                        if (QType == 1)
+                            RadioButtonListcreate(num, ID, title, answertotal, writedPage);
+                        else if (QType == 2)
+                            CheckBoxListcreate(num, ID, title, answertotal, writedPage);
+                        else
+                            TextBoxcreate(num, ID, title, writedPage);
+                        count += 1;
+                    }
+                    else
+                    {
+                        if (QType == 1)
+                            RadioButtonListwrited(num, ID, title, answertotal, writedQusetionnaire, writedPage);
+                        else if (QType == 2)
+                            CheckBoxListwrited(num, ID, title, answertotal, writedQusetionnaire, writedPage);
+                        else
+                            TextBoxwrited(num, ID, title, writedQusetionnaire, writedPage);
+                        count += 1;
+                    }
+
+                }
+            }
+
+            this.litqustioncount.Text = $"共{count - 1}個問題";
+        }
+
+
+        private void RadioButtonListcreate(string num, int ID, string title, string answertotal, int writedPage)
+        {
+            Label lbl = new Label();
+            lbl.Text = "<p>" + num + title + "</p>";
+            lbl.ID = "msg" + ID;
+            lbl.CssClass = "input-title";
+            this.PlaceHolder3.Controls.Add(lbl);
+
+            string[] answers = answertotal.Split(';');
+            RadioButtonList rdolist = new RadioButtonList();
+            rdolist.ID = "rdo" + ID;
+            rdolist.CssClass = "input-radioo";
+
+            for (int j = 0; j < answers.Length; j++)
+            {
+                ListItem item = new ListItem();
+                item.Text = answers[j];
+                if (writedPage == 1)
+                    item.Attributes["onclick"] = "return false";
+                rdolist.Items.Add(item);
+            }
+
+            this.PlaceHolder3.Controls.Add(rdolist);
+        }
+        private void RadioButtonListwrited(string num, int ID, string title, string answertotal, string writedQusetionnaire, int writedPage)
+        {
+            Label lbl = new Label();
+            lbl.Text = "<p>" + num + title + "</p>";
+            lbl.ID = "msg" + ID;
+            lbl.CssClass = "input-title";
+            this.PlaceHolder3.Controls.Add(lbl);
+
+            string[] checkeditem = writedQusetionnaire.Split(',');
+            string[] answers = answertotal.Split(';');
+            RadioButtonList rdolist = new RadioButtonList();
+            rdolist.ID = "rdo" + ID;
+            rdolist.CssClass = "input-radioo";
+
+            for (int j = 0; j < answers.Length; j++)
+            {
+                ListItem item = new ListItem();
+                item.Text = answers[j].Trim();
+
+                if (checkeditem.Contains(answers[j]))
+                    item.Selected = true;
+                if (writedPage == 1)
+                    item.Attributes["onclick"] = "return false";
+                rdolist.Items.Add(item);
+            }
+
+            this.PlaceHolder3.Controls.Add(rdolist);
+        }
+
+
+        private void CheckBoxListcreate(string num, int ID, string title, string answertotal, int writedPage)
+        {
+            Label lit = new Label();
+            lit.Text = "<p>" + num + title + "</p>";
+            lit.CssClass = "input-title";
+            this.PlaceHolder3.Controls.Add(lit);
+
+            string[] answers = answertotal.Split(';');
+            CheckBoxList cblist = new CheckBoxList();
+            cblist.ID = "cbl" + ID;
+            cblist.CssClass = "input-radioo";
+
+
+            for (int j = 0; j < answers.Length; j++)
+            {
+                ListItem item = new ListItem();
+                item.Text = answers[j];
+                if (writedPage == 1)
+                    item.Attributes["onclick"] = "return false";
+                cblist.Items.Add(item);
+            }
+
+            this.PlaceHolder3.Controls.Add(cblist);
+        }
+        private void CheckBoxListwrited(string num, int ID, string title, string answertotal, string writedQusetionnaire, int writedPage)
+        {
+            Label lit = new Label();
+            lit.Text = "<p>" + num + title + "</p>";
+            lit.CssClass = "input-title";
+            this.PlaceHolder3.Controls.Add(lit);
+
+            string[] answers = answertotal.Split(';');
+            CheckBoxList cblist = new CheckBoxList();
+            cblist.ID = "cbl" + ID;
+            cblist.CssClass = "input-radioo";
+
+            string[] checkeditem = writedQusetionnaire.Split(',');
+
+            for (int j = 0; j < answers.Length; j++)
+            {
+                ListItem item = new ListItem();
+                item.Text = answers[j];
+
+                if (checkeditem.Contains(answers[j].Trim()))
+                    item.Selected = true;
+                if (writedPage == 1)
+                    item.Attributes["onclick"] = "return false";
+
+                cblist.Items.Add(item);
+            }
+
+            this.PlaceHolder3.Controls.Add(cblist);
+        }
+
+
+        private void TextBoxcreate(string num, int ID, string title, int writedPage)
+        {
+            Label lit = new Label();
+            lit.Text = "<p>" + num + title + "<p>";
+            lit.CssClass = "input-title";
+            this.PlaceHolder3.Controls.Add(lit);
+
+            TextBox txt = new TextBox();
+            txt.ID = "txt" + ID;
+            txt.CssClass = "input-txtinput";
+            if (writedPage == 1)
+                txt.ReadOnly = true;
+            this.PlaceHolder3.Controls.Add(txt);
+        }
+        private void TextBoxwrited(string num, int ID, string title, string writedQusetionnaire, int writedPage)
+        {
+            Label lit = new Label();
+            lit.Text = "<p>" + num + title + "<p>";
+            lit.CssClass = "input-title";
+            this.PlaceHolder3.Controls.Add(lit);
+
+            TextBox txt = new TextBox();
+            txt.ID = "txt" + ID;
+            txt.CssClass = "input-txtinput";
+            txt.Text = writedQusetionnaire;
+
+            if (writedPage == 1)
+                txt.ReadOnly = true;
+
+            this.PlaceHolder3.Controls.Add(txt);
+        }
+
+
+        //======================▲這裡前臺填寫問捲也要用到，可抽成方法(但懶惰我就用複製的了)============================
+
+        protected void Repeater2_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "btnAnswer")
+            {
+                string editpostid = e.CommandArgument.ToString();
+                this.Session["btnAnswer"] = editpostid;
+                this.Session["questionshow"] = 1;
+                Response.Redirect(Request.RawUrl + "#tab-3");
+            }
         }
     }
 }

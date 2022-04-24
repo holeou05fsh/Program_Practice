@@ -17,5 +17,8 @@ namespace Questionnaire.Models
         public int QType { get; set; }
         public bool Required { get; set; }
 
+
+        public int QuestionID { get; set; }
+
     }
 }

@@ -14,6 +14,7 @@ namespace Questionnaire.ShareControls
         public int PageSize { get; set; } = 4;
         public int PageIndex { get; set; } = 1;
         public int TotalRows { get; set; } = 1;
+        public string UrlID { get; set; } = "";
 
         private string _url = null;
         /// <summary>如果外部有值定URL就使用值定的URL，否則用LocalPath</summary>
@@ -54,39 +55,39 @@ namespace Questionnaire.ShareControls
         public void Bind(NameValueCollection collection)
         {
             string qsText = this.BuildQueryString(collection);
-            
-            string page = "?Page=";
-            if (!String.IsNullOrWhiteSpace(qsText))
+            string url = this.Url;
+            bool urlcombination = url.Contains("?");
+
+
+            string page = "&Page=";
+            if (!urlcombination)
             {
-                page = "&Page=";
-                var regex = new Regex(Regex.Escape("&"));
-                qsText = regex.Replace(qsText, "?", 1);
+                page = "?Page=";
+                //var regex = new Regex(Regex.Escape("&"));
+                //qsText = regex.Replace(qsText, "?", 1);
             }
 
-            string url = this.Url;
             
             int maxpage = (int)Math.Ceiling((decimal)this.TotalRows / this.PageSize);
             this.aLinkPagePrev.HRef = url + qsText + page + (this.PageIndex - 1);
             this.aLinkPageNext.HRef = url + qsText + page + (this.PageIndex + 1);
 
-            if (1 >= this.PageIndex && String.IsNullOrWhiteSpace(qsText))
-                this.aLinkPagePrev.HRef = url + qsText + $"?Page=1";
-            else if (1 >= this.PageIndex && !String.IsNullOrWhiteSpace(qsText))
-            {
-                this.aLinkPagePrev.HRef = url + qsText + $"&Page=1";
-            }
+            if (!urlcombination) //|| (1 >= this.PageIndex && String.IsNullOrWhiteSpace(qsText))
+                this.aLinkPagePrev.HRef = url + qsText + $"?Page=1" + UrlID;
+            else 
+                this.aLinkPagePrev.HRef = url + qsText + $"&Page=1" + UrlID;
 
 
-            if (maxpage <= this.PageIndex && String.IsNullOrWhiteSpace(qsText))
-                this.aLinkPageNext.HRef = url + qsText + $"?Page={maxpage}";
-            else if (maxpage <= this.PageIndex && !String.IsNullOrWhiteSpace(qsText))
-                this.aLinkPageNext.HRef = url + qsText + $"&Page={maxpage}";
+            if (!urlcombination) //maxpage <= this.PageIndex && String.IsNullOrWhiteSpace(qsText)
+                this.aLinkPageNext.HRef = url + qsText + $"?Page={maxpage}" + UrlID;
+            else 
+                this.aLinkPageNext.HRef = url + qsText + $"&Page={maxpage}" + UrlID;
 
-            this.aLinkPage1.HRef = url + qsText + page + "1";
-            this.aLinkPage2.HRef = url + qsText + page + "2";
-            this.aLinkPage3.HRef = url + qsText + page + "3";
-            this.aLinkPage4.HRef = url + qsText + page + "4";
-            this.aLinkPage5.HRef = url + qsText + page + "5";
+            this.aLinkPage1.HRef = url + qsText + page + "1" + UrlID;
+            this.aLinkPage2.HRef = url + qsText + page + "2" + UrlID;
+            this.aLinkPage3.HRef = url + qsText + page + "3" + UrlID;
+            this.aLinkPage4.HRef = url + qsText + page + "4" + UrlID;
+            this.aLinkPage5.HRef = url + qsText + page + "5" + UrlID;
 
 
             if (maxpage == 0)

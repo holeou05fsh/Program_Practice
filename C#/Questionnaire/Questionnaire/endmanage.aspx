@@ -20,8 +20,8 @@
             <div class="left">
                 <div class="managelink">
                     <oi>
-                        <li><a href="#">問卷管理</a> </li>
-                        <li><a href="#">常用問題管理</a> </li>
+                        <li><a href="/index.aspx/backindex">問卷管理</a> </li>
+                        <li><a href="/index.aspx/frequentlyasked">常用問題管理</a> </li>
                     </oi>
                 </div>
             </div>
@@ -32,7 +32,6 @@
                     <span id="tab-2">頁面1</span>
                     <span id="tab-3">頁面2</span>
                     <span id="tab-4">頁面3</span>
-                    <span id="tab-5">頁面4</span>
 
                     <!-- 頁籤按鈕 -->
                     <div id="tab">
@@ -41,7 +40,6 @@
                             <li><a href="#tab-2">問題</a></li>
                             <li><a href="#tab-3">填寫資料</a></li>
                             <li><a href="#tab-4">統計</a></li>
-                            <li><a href="#tab-5">常用問題</a></li>
                         </ul>
 
                         <!-- 頁籤的內容區塊 -->
@@ -104,8 +102,8 @@
                                     <tr>
                                         <th>種類</th>
                                         <td>
-                                            <asp:DropDownList ID="DropDownList1" runat="server">
-                                                <asp:ListItem>自訂問題</asp:ListItem>
+                                            <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True"
+        onselectedindexchanged="DropDownList1_SelectedIndexChanged">
                                                 <asp:ListItem>常用問題</asp:ListItem>
                                             </asp:DropDownList></td>
                                     </tr>
@@ -173,7 +171,10 @@
 
                         <div class="tab-content-3">
                             <asp:PlaceHolder ID="PlaceHolder1" runat="server">
-                                <asp:Button ID="inputCSV" runat="server" Text="匯出" />
+                                <asp:Button ID="inputCSV" runat="server" Text="匯出" OnClick="inputCSV_Click" />
+                                &nbsp&nbsp&nbsp&nbsp&nbsp
+                                <asp:TextBox ID="TextBox11" runat="server" placeholder="請輸入儲存路徑"></asp:TextBox>
+                                <asp:Literal ID="Literal2" runat="server"></asp:Literal>
                                 <table class="questionshow">
                                     <tr>
                                         <th>#</th>
@@ -199,8 +200,9 @@
                                 </table>
                                 <uc1:ucPagination runat="server" ID="ucPagination" />
 
-
                             </asp:PlaceHolder>
+
+
                             <asp:PlaceHolder ID="PlaceHolder2" runat="server" Visible="false">
 
                                 <table class="infodata">
@@ -237,22 +239,45 @@
 
                                 <asp:Literal ID="litqustioncount" runat="server"></asp:Literal>
 
-
-                                <asp:PlaceHolder ID="PlaceHolder3" runat="server"></asp:PlaceHolder>
-
+                                <div class="people-answer">
+                                    <asp:PlaceHolder ID="PlaceHolder3" runat="server"></asp:PlaceHolder>
+                                </div>
                                 <asp:Button ID="btnCancel3" runat="server" Text="取消" OnClick="btnCancel3_Click" />
                             </asp:PlaceHolder>
-
                         </div>
 
                         <div class="tab-content-4">
-                            <p>頁面3顯示的內容</p>
-                        </div>
+                            <asp:Repeater ID="Repeater3" runat="server" OnItemDataBound="Repeater3_ItemDataBound">
+                                <ItemTemplate>
+                                    <h3>
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <asp:Repeater ID="Repeater4" runat="server">
+                                        <ItemTemplate>
+                                            <p class="input-answer"><%# Eval("S_Answer") %>  <%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
 
-                        <div class="tab-content-5">
-                            <p>常用問題管理</p>
-                        </div>
+                                </ItemTemplate>
+                            </asp:Repeater>
 
+
+
+                            <asp:Repeater ID="Repeater5" runat="server" OnItemDataBound="Repeater5_ItemDataBound">
+                                <ItemTemplate>
+                                    <h3>
+                                        <%# Eval("Title") %>
+                                    </h3>
+                                    <asp:Repeater ID="Repeater6" runat="server">
+                                        <ItemTemplate>
+                                            <p class="input-answer"><%# Eval("S_Answer") %>  <%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
+
+                                </ItemTemplate>
+                            </asp:Repeater>
+
+                        </div>
 
                     </div>
 

@@ -59,8 +59,7 @@ span ~ #tab > ul li:first-child a,
 #tab-1:target ~ #tab > ul li a[href$="#tab-1"],
 #tab-2:target ~ #tab > ul li a[href$="#tab-2"],
 #tab-3:target ~ #tab > ul li a[href$="#tab-3"],
-#tab-4:target ~ #tab > ul li a[href$="#tab-4"],
-#tab-5:target ~ #tab > ul li a[href$="#tab-5"] {
+#tab-4:target ~ #tab > ul li a[href$="#tab-4"] {
     background: #fff;
     border-radius: 5px 5px 0 0;
 }
@@ -69,8 +68,7 @@ span ~ #tab > ul li:first-child a,
     #tab-1:target ~ #tab > ul li a[href$="#tab-1"]::before,
     #tab-2:target ~ #tab > ul li a[href$="#tab-2"]::before,
     #tab-3:target ~ #tab > ul li a[href$="#tab-3"]::before,
-    #tab-4:target ~ #tab > ul li a[href$="#tab-4"]::before,
-    #tab-5:target ~ #tab > ul li a[href$="#tab-5"]::before {
+    #tab-4:target ~ #tab > ul li a[href$="#tab-4"]::before{
         background-color: white;
         height: 100%;
     }
@@ -80,17 +78,16 @@ span ~ #tab > div:first-of-type,
 #tab-1:target ~ #tab > div.tab-content-1,
 #tab-2:target ~ #tab > div.tab-content-2,
 #tab-3:target ~ #tab > div.tab-content-3,
-#tab-4:target ~ #tab > div.tab-content-4,
-#tab-5:target ~ #tab > div.tab-content-5 {
+#tab-4:target ~ #tab > div.tab-content-4 {
     visibility: visible;
     height: auto;
     background: #fff;
     padding: 20px
 }
 
-span {
+/*span {
     display: none;
-}
+}*/
 
 
 /*=====================================*/
@@ -348,3 +345,7 @@ span {
 
 
 /*===================================*/
+
+.people-answer {
+    padding-left:60px;
+}

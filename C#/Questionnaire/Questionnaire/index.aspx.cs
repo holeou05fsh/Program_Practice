@@ -14,6 +14,9 @@ namespace Questionnaire
     public partial class index : System.Web.UI.Page
     {
         private Questionnaire_manage _qtmgr = new Questionnaire_manage();
+        private Question_manage _qmgr = new Question_manage();
+        private FrequentlyAsked_manage _famgr = new FrequentlyAsked_manage();
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -51,14 +54,22 @@ namespace Questionnaire
                     this.PlaceHolder2.Visible = true;
                     this.lblindextitle.Text = "後台 - 問卷管理";
                 }
+                else if (backpath.Length > 2 && backpath[2] == "frequentlyasked")
+                {
+                    this.PlaceHolder1.Visible = false;
+                    this.PlaceHolder2.Visible = true;
+                    this.PlaceHolder3.Visible = false;
+                    this.PlaceHolder4.Visible = true;
+                    this.lblindextitle.Text = "後台 - 常用問題管理";
+                }
 
                 NameValueCollection nvcQS = new NameValueCollection();
 
-                if ( keyword != "" && StartTime != "" && EndTime != "")
+                if (keyword != "" && StartTime != "" && EndTime != "")
                 {
                     nvcQS.Add("keyword", keyword);
                     nvcQS.Add("StartTime", StartTime);
-                    nvcQS.Add("EndTime", EndTime); 
+                    nvcQS.Add("EndTime", EndTime);
                 }
                 this.ucPagination.TotalRows = totalRows;
                 this.ucPagination.PageIndex = (int)Pageindex;
@@ -66,7 +77,31 @@ namespace Questionnaire
                 this.ucPagination1.TotalRows = totalRows1;
                 this.ucPagination1.PageIndex = (int)Pageindex;
                 this.ucPagination1.Bind(nvcQS);
+
+
+                List<Question> FrequentlyAsked = _famgr.GetmanageFrequentlyAsked();
+                this.Repeater3.DataSource = FrequentlyAsked;
+                this.Repeater3.DataBind();
+
+                if (this.Session["questionedit"] != null)
+                {
+                    string[] Frequentlyvals = this.Session["questionedit"].ToString().Split(',');
+                    this.TextBox5.Text = Frequentlyvals[1];
+                    this.TextBox7.Text = Frequentlyvals[2];
+                    if (Frequentlyvals[3] == "1")
+                        this.DropDownList2.SelectedValue = "單選方塊";
+                    else if (Frequentlyvals[3] == "2")
+                        this.DropDownList2.SelectedValue = "複選方塊";
+                    else
+                        this.DropDownList2.SelectedValue = "文字";
+                    if (Frequentlyvals[4] == "True")
+                        this.CheckBox1.Checked = true;
+
+                    this.Session["questionedit"] = null;
+                }
+
             }
+
         }
 
         protected void btnbackindex_Click(object sender, EventArgs e)
@@ -81,6 +116,7 @@ namespace Questionnaire
             {
                 Response.Redirect("/index.aspx/backindex");
             }
+
         }
 
         protected void btnplus_Click(object sender, EventArgs e)
@@ -111,7 +147,7 @@ namespace Questionnaire
 
                 this.Response.Redirect(url);
             }
-            
+
         }
 
         protected void btnSearch1_Click(object sender, EventArgs e)
@@ -128,6 +164,61 @@ namespace Questionnaire
                 "&EndTime=" + EndTime;
 
                 this.Response.Redirect(url);
+            }
+        }
+
+        protected void Repeater3_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "questionedit")
+            {
+                string[] Frequentlyvals = e.CommandArgument.ToString().Split(',');
+                int ID = Convert.ToInt32(Frequentlyvals[0]);
+
+                this.Session["questionedit"] = e.CommandArgument.ToString();
+
+                _famgr.delQuestion(ID);
+
+                Response.Redirect(Request.RawUrl);
+
+            }
+        }
+
+
+        protected void btndelete1_Click(object sender, EventArgs e)
+        {
+            string[] strvals = this.Request.Form.GetValues("questionlistcheck");
+            int[] intvals = Array.ConvertAll(strvals, s => int.Parse(s));
+
+            if (intvals != null)
+            {
+                foreach (int val in intvals)
+                {
+                    _famgr.delQuestion(val);
+                }
+            }
+
+            Response.Redirect(Request.RawUrl);
+        }
+
+        protected void btnjoin_Click(object sender, EventArgs e)
+        {
+            string title = this.TextBox5.Text.Trim();
+            string answer = this.TextBox7.Text.Trim();
+            string qtypeSelected = this.DropDownList2.SelectedValue;
+            string requiredChecked = this.CheckBox1.Checked.ToString();
+            int qtype = 3;
+            if (qtypeSelected == "單選方塊")
+                qtype = 1;
+            else if (qtypeSelected == "複選方塊")
+                qtype = 2;
+            byte required = 0;
+            if (requiredChecked == "True")
+                required = 1;
+
+            if (title != "" && answer != "")
+            {
+                _famgr.insertQuestion(title, answer, qtype, required);
+                Response.Redirect(Request.RawUrl);
             }
         }
     }

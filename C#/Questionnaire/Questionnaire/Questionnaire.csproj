@@ -103,6 +103,7 @@
     <Compile Include="index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Managers\FrequentlyAsked_manage.cs" />
     <Compile Include="Managers\Questionnaire_manage.cs" />
     <Compile Include="Managers\Question_manage.cs" />
     <Compile Include="Managers\Statistics_manage.cs" />

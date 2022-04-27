@@ -3,6 +3,7 @@ using Questionnaire.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -14,6 +15,12 @@ namespace Questionnaire
     {
         private Question_manage _qmgr = new Question_manage();
         private Questionnaire_manage _qtmgr = new Questionnaire_manage();
+        private Statistics_manage _Smgr = new Statistics_manage();
+        private FrequentlyAsked_manage _famgr = new FrequentlyAsked_manage();
+
+        int Questionnum = 0;
+        int QuestionnumTwo = 0;
+
         private string[] _joinsessions = new string[] {
             "joinsession1", "joinsession2", "joinsession3", "joinsession4",
             "joinsession5", "joinsession6", "joinsession7", "joinsession8",
@@ -22,10 +29,8 @@ namespace Questionnaire
 
         protected void Page_Init(object sender, EventArgs e)
         {
-
             //=========================== Tag-3 ===============================
             int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
-
 
             if (QSID != null && QSID != 0)
             {
@@ -42,12 +47,12 @@ namespace Questionnaire
 
                     string atagurl = Request.RawUrl;
 
-                    for (int i=0; i < Pagetotal; i++)
+                    for (int i = 0; i < Pagetotal; i++)
                     {
                         if (atagurl.Contains($"&Page={i}"))
                             atagurl = Request.RawUrl.Replace($"&Page={i}", "");
                     }
-                    
+
 
                     this.ucPagination.Url = atagurl;
                     this.ucPagination.UrlID = "#tab-3";
@@ -81,16 +86,22 @@ namespace Questionnaire
                         string QTypeID = QTypecontrol + question.QuestionID;
                         this.Session[QTypeID] = question.Answer;
                     }
-                    
+
 
                     QuestionnaireMarker(questions, 1);
-
-                    
 
                     this.PlaceHolder1.Visible = false;
                     this.PlaceHolder2.Visible = true;
                 }
             }
+
+            if (this.Session["tag3"] != null)
+            {
+                string tag3msg = this.Session["tag3"].ToString();
+                this.Literal2.Text = tag3msg;
+                this.Session["tag3"] = null;
+            }
+
         }
 
 
@@ -112,9 +123,11 @@ namespace Questionnaire
                         this.TextBox4.Text = Convert.ToDateTime(questionnaireData.EndTime.ToString()).ToString("yyyy-MM-dd");
                         this.chkopen.Checked = questionnaireData.State;
                     }
+                    else
+                        Response.Redirect("https://c.tenor.com/rkm2Az4596oAAAAM/angry-baby-crypcorp.gif");
                 }
                 else
-                    Response.Redirect("https://c.tenor.com/rkm2Az4596oAAAAM/angry-baby-crypcorp.gif");
+                    this.TextBox3.Text = Convert.ToDateTime(DateTime.Now.ToString()).ToString("yyyy-MM-dd");
 
                 //=========================== Tag-2 ===============================
                 //紀錄:
@@ -132,26 +145,13 @@ namespace Questionnaire
                 if (Session["editsession"] != null)
                 {
                     string editID = this.Session["editsession"].ToString();
+                    string[] sessiondata = editID.ToString().Split();
 
-                    string[] sessiondata = this.Session[editID].ToString().Split();
+                    if (_joinsessions.Contains(editID))
+                        sessiondata = this.Session[editID].ToString().Split();
+
 
                     if (sessiondata.Last() != "1")
-                    {
-                        this.TextBox5.Text = sessiondata[1];
-                        this.TextBox7.Text = sessiondata[2];
-                        if (sessiondata[3] == "1")
-                            this.DropDownList2.SelectedValue = "單選方塊";
-                        else if (sessiondata[3] == "2")
-                            this.DropDownList2.SelectedValue = "複選方塊";
-                        else
-                            this.DropDownList2.SelectedValue = "文字";
-                        if (sessiondata[4] == "True")
-                            this.CheckBox1.Checked = true;
-
-                        Session[editID] = null;
-                        Session["editsession"] = null;
-                    }
-                    else
                     {
                         this.TextBox5.Text = sessiondata[2];
                         this.TextBox7.Text = sessiondata[3];
@@ -164,12 +164,38 @@ namespace Questionnaire
                         if (sessiondata[5] == "True")
                             this.CheckBox1.Checked = true;
 
+                        Session[editID] = null;
+                        Session["editsession"] = null;
+                    }
+                    else
+                    {
+                        this.TextBox5.Text = sessiondata[2];
+                        this.TextBox7.Text = sessiondata[3];
+                        if (sessiondata[3] == "1")
+                            this.DropDownList2.SelectedValue = "單選方塊";
+                        else if (sessiondata[3] == "2")
+                            this.DropDownList2.SelectedValue = "複選方塊";
+                        else
+                            this.DropDownList2.SelectedValue = "文字";
+                        if (sessiondata[4] == "True")
+                            this.CheckBox1.Checked = true;
+
                         sessiondata[6] = "0";
                         this.Session[editID] = String.Join(" ", sessiondata);
+
                         this.Session["editsession"] = null;
                     }
 
                 }
+
+
+                List<Question> FrequentlyAskeds = _famgr.GetmanageFrequentlyAsked();
+
+                foreach (Question Asked in FrequentlyAskeds)
+                {
+                    DropDownList1.Items.Add(new ListItem(Asked.Title, Asked.ID.ToString()));
+                }
+
 
 
 
@@ -230,6 +256,16 @@ namespace Questionnaire
                     this.Repeater1.DataBind();
 
                 }
+
+                //=========================== Tag-4 ===============================
+                List<Question> QuestionData = _Smgr.GetmanageQuestion((int)QSID, 1);
+                List<Question> QuestionData2 = _Smgr.GetmanageQuestion((int)QSID, 2);
+
+                this.Repeater3.DataSource = QuestionData;
+                this.Repeater3.DataBind();
+
+                this.Repeater5.DataSource = QuestionData2;
+                this.Repeater5.DataBind();
             }
         }
 
@@ -240,7 +276,7 @@ namespace Questionnaire
             Session.Abandon();
             this.Session["questionshow"] = 0;
             this.Session["btnAnswer"] = null;
-            
+
             Response.Redirect(Request.RawUrl + "#tab-3");
         }
 
@@ -423,7 +459,6 @@ namespace Questionnaire
             }
 
             Response.Redirect(Request.RawUrl + "#tab-2");
-
         }
 
 
@@ -827,6 +862,252 @@ namespace Questionnaire
                 this.Session["questionshow"] = 1;
                 Response.Redirect(Request.RawUrl + "#tab-3");
             }
+        }
+
+
+        protected void Repeater3_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
+
+            List<Question> QuestionData = _Smgr.GetmanageQuestion((int)QSID, 1);
+
+            int numquestion = QuestionData[Questionnum].ID;
+            List<StatisticsData> StatisticsDatas = _Smgr.GetStatistics((int)QSID, 1, numquestion);
+
+            string[] answerlist = QuestionData[Questionnum].Answer.Split(';');  //12~15;16~18;19~22;23~30;30~40
+
+            List<StatisticsData> StatisticShows = new List<StatisticsData>();
+
+            foreach (string answer in answerlist)
+            {
+                StatisticsData StatisticShow = new StatisticsData()
+                {
+                    S_ID = QuestionData[Questionnum].QuestionnaireID,
+                    S_Title = QuestionData[Questionnum].Title,
+                    S_Answer = answer,
+                };
+                StatisticShows.Add(StatisticShow);
+            }
+
+
+            int totalcount = 0;
+            foreach (StatisticsData StatisticsData in StatisticsDatas)
+            {
+                foreach (StatisticsData answerdataplus in StatisticShows)
+                {
+                    if (StatisticsData.Answer == answerdataplus.S_Answer)
+                    {
+                        //{19~22:1}
+                        answerdataplus.S_Answer = StatisticsData.Answer;
+                        answerdataplus.S_Count = StatisticsData.Count.ToString();
+                        totalcount += StatisticsData.Count;
+                    }
+                }
+            }
+
+
+            foreach (StatisticsData answerdataplus in StatisticShows)
+            {
+                string answercount = answerdataplus.S_Count; //12~15;16~18;19~22;23~30;30~40
+
+                if (answercount != null)  //19~22:1
+                {
+                    string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count) + 1).ToString() + "%";
+                    answerdataplus.S_Rate = ratio;
+                }
+                else
+                {
+                    answerdataplus.S_Rate = "0%";
+                    answerdataplus.S_Count = "0";
+                }
+            }
+
+            if (e.Item.ItemType == ListItemType.Item ||
+               e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Repeater rptSubsection = e.Item.FindControl("Repeater4") as Repeater;
+                rptSubsection.DataSource = StatisticShows;
+                rptSubsection.DataBind();
+                Questionnum += 1;
+            }
+        }
+
+
+        protected void Repeater5_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
+
+            List<Question> QuestionData2 = _Smgr.GetmanageQuestion((int)QSID, 2);
+
+            int numquestion = QuestionData2[QuestionnumTwo].ID;
+            List<StatisticsData> StatisticsDatas = _Smgr.GetStatisticsTwo((int)QSID, 2, numquestion);
+
+            string[] answerlist = QuestionData2[QuestionnumTwo].Answer.Split(';');
+            //活存/定存;儲蓄險;外幣存款;債券;ETF;信託基金;股票;房地產;外匯;虛擬貨幣
+
+            List<StatisticsData> StatisticShows = new List<StatisticsData>();
+
+            foreach (string answer in answerlist)
+            {
+                StatisticsData StatisticShow = new StatisticsData()
+                {
+                    S_ID = QuestionData2[QuestionnumTwo].ID,
+                    S_Title = QuestionData2[QuestionnumTwo].Title,
+                    S_Answer = answer,
+                    S_Count = "0",
+                };
+                StatisticShows.Add(StatisticShow);
+            }
+
+            int totalcount = 0;
+            foreach (StatisticsData StatisticsData in StatisticsDatas) //SQL
+            {
+                string[] datas = StatisticsData.Answer.Split(',');
+
+                foreach (string data in datas)
+                {
+                    foreach (StatisticsData StatisticShow in StatisticShows)
+                    {
+                        if (data == StatisticShow.S_Answer)
+                        {
+                            int scount = Convert.ToInt32(StatisticShow.S_Count);
+                            StatisticShow.S_Count = (scount + 1).ToString();
+                            totalcount += 1;
+                        }
+                    }
+                }
+
+            }
+
+
+            foreach (StatisticsData answerdataplus in StatisticShows)
+            {
+                string answercount = answerdataplus.S_Count;
+
+                if (answercount != "0")
+                {
+                    string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count)).ToString() + "%";
+                    answerdataplus.S_Rate = ratio;
+                }
+                else
+                {
+                    answerdataplus.S_Rate = "0%";
+                    answerdataplus.S_Count = "0";
+                }
+            }
+
+
+
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Repeater rptSubsection = e.Item.FindControl("Repeater6") as Repeater;
+                rptSubsection.DataSource = StatisticShows;
+                rptSubsection.DataBind();
+                QuestionnumTwo += 1;
+            }
+
+
+
+        }
+
+
+        private void WriteToCSV(string FilePath, AnswerData info, List<Question> answer)
+        {
+            using (var file = new StreamWriter(FilePath))
+            {
+                //Person info
+                file.WriteLineAsync($"{"姓名"},{"年齡"},{"手機"},{"信箱"},{"填寫日期"}");
+                file.WriteLineAsync($"{info.Name},{info.Age},{info.Phone},{info.Email},{info.Date}");
+
+                file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
+
+                //Person answer
+                file.WriteLineAsync($"{"問題"},{"回答"},{"選擇"},{"種類"},{"必填"}");
+                foreach (var item in answer)
+                {
+                    file.WriteLineAsync($"{item.Title},{item.Answer},{item.Choose},{item.QType},{item.Required}");
+                }
+                file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
+                file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
+            }
+        }
+
+        protected void inputCSV_Click(object sender, EventArgs e)
+        {
+            this.Session["tag3"] = null;
+
+            int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
+            if (QSID != null && QSID != 0)
+            {
+                List<AnswerData> infos = _qtmgr.GetBackPersonalallinfo((int)QSID);
+
+                string FilePath = @"D:\OneDrive\文件\GitHubFile\Program_Practice\C#\Questionnaire\Questionnaire\info.csv";
+                if (this.TextBox11.Text != "")
+                    FilePath = this.TextBox11.Text;
+
+                try
+                {
+                    using (var file = new StreamWriter(FilePath))
+                    {
+                        foreach (AnswerData info in infos)
+                        {
+                            //Person info
+                            file.WriteLine($"{"姓名"},{"年齡"},{"手機"},{"信箱"},{"填寫日期"}");
+                            file.WriteLine($"{info.Name},{info.Age},{info.Phone},{info.Email},{info.Date}");
+
+                            file.WriteLine($"{"*****"},{"*****"},{"*****"},{"*****"},{"*****"}");
+
+                            //Person answer
+
+                            List<Question> answers = _qtmgr.GetBackPersonalallanswer(info.ID, (int)QSID);
+
+                            file.WriteLine($"{"問題"},{"回答"},{"選擇"},{"種類"},{"必填"}");
+                            foreach (var item in answers)
+                            {
+                                file.WriteLine($"{item.Title},{item.Answer},{item.Choose},{item.QType},{item.Required}");
+                            }
+                            file.WriteLine($"{"=============="},{"============"},{"============"},{"============"},{"============"}");
+                            file.WriteLine($"{" "},{" "},{" "},{" "},{" "}");
+                        }
+                    }
+
+                }
+                catch
+                {
+                    this.Session["tag3"] = "儲存路徑不正確";
+                }
+
+            }
+            else
+                this.Session["tag3"] = "無此資料";
+
+            Response.Redirect(Request.RawUrl + "#tab-3");
+        }
+
+        protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int ID = Convert.ToInt32(this.DropDownList1.SelectedValue);
+
+            Question Asked = _famgr.GetmanageFrequentlyAskedOne(ID);
+
+            this.Session["editsession"] = $"{Asked.ID} {"Asked"} {Asked.Title} {Asked.Answer} {Asked.QType} {Asked.Required} 1";
+
+            Response.Redirect(Request.RawUrl + "#tab-2");
+
+
+            //this.TextBox5.Text = Asked.Title;
+            //this.TextBox7.Text = Asked.Answer;
+
+            //int AskedQtype = Asked.QType;
+            //if (AskedQtype == 1)
+            //    this.DropDownList2.SelectedValue = "單選方塊";
+            //else if (AskedQtype == 2)
+            //    this.DropDownList2.SelectedValue = "複選方塊";
+            //else
+            //    this.DropDownList2.SelectedValue = "文字";
+
+            //if (Asked.Required == true)
+            //    this.CheckBox1.Checked = true;
         }
     }
 }

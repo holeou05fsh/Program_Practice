@@ -130,63 +130,68 @@
             <div class="Questionnaire-input">
                 <div class="input-radio">
                     <h1>單選方塊</h1>
-                    <hr/>
+                    <hr />
                     <asp:Repeater ID="Repeater1" runat="server" OnItemDataBound="Repeater1_OnItemDataBound">
                         <ItemTemplate>
                             <h3>
                                 <%# Eval("Title") %>
                             </h3>
 
-                            <asp:Repeater ID="Repeater2" runat="server" >
-                        <ItemTemplate>
-                            <p class="input-answer"><%# Eval("S_Answer") %></p>
-                            <div class="input-show">
+                            <asp:Repeater ID="Repeater2" runat="server">
+                                <ItemTemplate>
+                                    <p class="input-answer"><%# Eval("S_Answer") %></p>
+                                    <div class="input-show">
 
-                                <div class="input-barchart" style="width: <%#Eval("S_Rate") %>;">
-                                    <p><%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
-                                </div>
+                                        <div class="input-barchart" style="width: <%#Eval("S_Rate") %>;">
+                                            <p><%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
+                                        </div>
 
-                            </div>
+                                    </div>
+                                </ItemTemplate>
+                            </asp:Repeater>
+
                         </ItemTemplate>
-                    </asp:Repeater>
 
-                        </ItemTemplate>
-                        
-                                <SeparatorTemplate>
-                                    <hr />
-                                </SeparatorTemplate>
+                        <SeparatorTemplate>
+                            <hr />
+                        </SeparatorTemplate>
                     </asp:Repeater>
 
                 </div>
 
-                <br/> <br/> <br/> <br/> <br/> <br/>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
                 <div class="input-radio">
                     <h1>複選方塊</h1>
-                    <hr/>
-                    <asp:Repeater ID="Repeater3" runat="server"  OnItemDataBound="Repeater3_ItemDataBound">
+                    <hr />
+                    <asp:Repeater ID="Repeater3" runat="server" OnItemDataBound="Repeater3_ItemDataBound">
                         <ItemTemplate>
                             <h3>
                                 <%# Eval("Title") %>
                             </h3>
 
-                             <asp:Repeater ID="Repeater4" runat="server" >
-                        <ItemTemplate>
-                            <p class="input-answer"><%# Eval("S_Answer") %></p>
-                            <div class="input-show">
+                            <asp:Repeater ID="Repeater4" runat="server">
+                                <ItemTemplate>
+                                    <p class="input-answer"><%# Eval("S_Answer") %></p>
+                                    <div class="input-show">
 
-                                <div class="input-barchart" style="width: <%#Eval("S_Rate") %>;">
-                                    <p><%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
-                                </div>
+                                        <div class="input-barchart" style="width: <%#Eval("S_Rate") %>;">
+                                            <p><%#Eval("S_Rate") %>  (<%#Eval("S_Count") %>人)</p>
+                                        </div>
 
-                            </div>
+                                    </div>
+                                </ItemTemplate>
+                            </asp:Repeater>
+
                         </ItemTemplate>
-                    </asp:Repeater>
 
-                        </ItemTemplate>
-                        
-                                <SeparatorTemplate>
-                                    <hr />
-                                </SeparatorTemplate>
+                        <SeparatorTemplate>
+                            <hr />
+                        </SeparatorTemplate>
                     </asp:Repeater>
 
                 </div>

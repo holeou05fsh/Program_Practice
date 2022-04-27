@@ -20,5 +20,10 @@ namespace Questionnaire.Models
 
         public int QuestionID { get; set; }
 
+
+        public string Choose { get; set; }
+
+        
+
     }
 }

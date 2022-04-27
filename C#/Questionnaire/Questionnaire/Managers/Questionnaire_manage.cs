@@ -516,11 +516,9 @@ namespace Questionnaire.Managers
 
         public AnswerData GetBackPersonalinfo(int ID)
         {
-
-
             string connStr = ConfigString.GetConfigString();
             string commandText =
-                $@"
+                @"
                     SELECT  *
                     FROM Personalinfo
                     WHERE ID = @ID
@@ -562,6 +560,106 @@ namespace Questionnaire.Managers
         }
 
 
+        public List<AnswerData> GetBackPersonalallinfo(int QuestionnaireID)
+        {
+            string connStr = ConfigString.GetConfigString();
+            string commandText =
+                @"
+                    SELECT  *
+                    FROM Personalinfo
+                    WHERE QuestionnaireID = @QuestionnaireID
+                ";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+
+                        connection.Open();
+                        command.Parameters.AddWithValue("@QuestionnaireID", QuestionnaireID);
+
+                        SqlDataReader reader = command.ExecuteReader();
+                        List<AnswerData> questionnaireDatas = new List<AnswerData>();
+                        while (reader.Read())
+                        {
+                            AnswerData questionnaireData = new AnswerData()
+                            {
+                                ID = (int)reader["ID"],
+                                QuestionnaireID = (int)reader["QuestionnaireID"],
+                                Name = (string)reader["Name"],
+                                Age = (int)reader["Age"],
+                                Phone = (int)reader["Phone"],
+                                Email = (string)reader["Email"],
+                                Date = (DateTime)reader["Date"],
+                            };
+                            questionnaireDatas.Add(questionnaireData);
+                        }
+                        return questionnaireDatas;
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+
+        public List<Question> GetBackPersonalallanswer(int PersonalinfoID, int QuestionnaireID)
+        {
+            string connStr = ConfigString.GetConfigString();
+            string commandText =
+                @"
+                    select Question.Title
+                          ,Question.Answer
+	                      ,TempT.Answer AS 'Choose'
+                          ,Question.QType
+                          ,Question.Required
+                    from Question
+
+                    LEFT JOIN
+	                    (
+		                    select QuestionID,Answer from Answer
+		                    where PersonalinfoID=@PersonalinfoID
+	                    ) AS TempT
+                    ON Question.ID = TempT.QuestionID
+                    where QuestionnaireID =@QuestionnaireID
+                ";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+
+                        connection.Open();
+                        command.Parameters.AddWithValue("@PersonalinfoID", PersonalinfoID);
+                        command.Parameters.AddWithValue("@QuestionnaireID", QuestionnaireID);
+
+                        SqlDataReader reader = command.ExecuteReader();
+                        List<Question> questionnaireDatas = new List<Question>();
+                        while (reader.Read())
+                        {
+                            Question questionnaireData = new Question()
+                            {
+                                Title = (string)reader["Title"],
+                                Answer = (string)reader["Answer"],
+                                Choose = reader["Choose"] as string,
+                                QType = (int)reader["QType"],
+                                Required = (bool)reader["Required"],
+                            };
+                            questionnaireDatas.Add(questionnaireData);
+                        }
+                        return questionnaireDatas;
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
     }
 }

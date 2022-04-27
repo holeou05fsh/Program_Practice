@@ -203,6 +203,7 @@ namespace Questionnaire.Managers
                                 EndTime = (DateTime)reader["EndTime"],
                                 State = (bool)reader["State"],
                                 StrState = strstate,
+                                Sort = (Int64)reader["Sort"]
                             };
                             ChapterDatas.Add(questionnaireData);
                         }

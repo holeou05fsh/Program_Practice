@@ -56,31 +56,29 @@ namespace Questionnaire.ShareControls
         {
             string qsText = this.BuildQueryString(collection);
             string url = this.Url;
-            bool urlcombination = url.Contains("?");
 
-
-            string page = "&Page=";
-            if (!urlcombination)
+            string page = "?Page=";
+            if (!String.IsNullOrWhiteSpace(qsText) || url.Contains("?"))
             {
-                page = "?Page=";
-                //var regex = new Regex(Regex.Escape("&"));
-                //qsText = regex.Replace(qsText, "?", 1);
+                page = "&Page=";
+                var regex = new Regex(Regex.Escape("&"));
+                qsText = regex.Replace(qsText, "?", 1);
             }
 
-            
-            int maxpage = (int)Math.Ceiling((decimal)this.TotalRows / this.PageSize);
-            this.aLinkPagePrev.HRef = url + qsText + page + (this.PageIndex - 1);
-            this.aLinkPageNext.HRef = url + qsText + page + (this.PageIndex + 1);
 
-            if (!urlcombination) //|| (1 >= this.PageIndex && String.IsNullOrWhiteSpace(qsText))
+            int maxpage = (int)Math.Ceiling((decimal)this.TotalRows / this.PageSize);
+            this.aLinkPagePrev.HRef = url + qsText + page + (this.PageIndex - 1) + UrlID;
+            this.aLinkPageNext.HRef = url + qsText + page + (this.PageIndex + 1) + UrlID;
+
+            if (1 >= this.PageIndex && String.IsNullOrWhiteSpace(qsText)) //|| (1 >= this.PageIndex && String.IsNullOrWhiteSpace(qsText))
                 this.aLinkPagePrev.HRef = url + qsText + $"?Page=1" + UrlID;
-            else 
+            else if (1 >= this.PageIndex && !String.IsNullOrWhiteSpace(qsText))
                 this.aLinkPagePrev.HRef = url + qsText + $"&Page=1" + UrlID;
 
 
-            if (!urlcombination) //maxpage <= this.PageIndex && String.IsNullOrWhiteSpace(qsText)
+            if (maxpage <= this.PageIndex && String.IsNullOrWhiteSpace(qsText)) //maxpage <= this.PageIndex && String.IsNullOrWhiteSpace(qsText)
                 this.aLinkPageNext.HRef = url + qsText + $"?Page={maxpage}" + UrlID;
-            else 
+            else if (maxpage <= this.PageIndex && !String.IsNullOrWhiteSpace(qsText))
                 this.aLinkPageNext.HRef = url + qsText + $"&Page={maxpage}" + UrlID;
 
             this.aLinkPage1.HRef = url + qsText + page + "1" + UrlID;

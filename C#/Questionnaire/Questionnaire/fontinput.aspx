@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>asd</title>
+    <title>fontinput</title>
     <link href="/CSS/fontinput.css" rel="stylesheet" />
 </head>
 <body>
@@ -22,12 +22,10 @@
                 <div class="three">
                     <asp:Literal ID="lilTimestate" runat="server"></asp:Literal>
                     <br />
-                    <%--投票中<br />--%>
                     <asp:Literal ID="lilStartTime" runat="server"></asp:Literal>
                     ~ 
                     <asp:Literal ID="lilEndTime" runat="server"></asp:Literal>
 
-                    <%--2021/09/01 ~ 2021/09/01--%>
                 </div>
             </div>
         </div>
@@ -129,8 +127,7 @@
         <asp:PlaceHolder ID="PlaceHolder3" runat="server" Visible="false">
             <div class="Questionnaire-input">
                 <div class="input-radio">
-                    <h1>單選方塊</h1>
-                    <hr />
+
                     <asp:Repeater ID="Repeater1" runat="server" OnItemDataBound="Repeater1_OnItemDataBound">
                         <ItemTemplate>
                             <h3>
@@ -155,6 +152,10 @@
                         <SeparatorTemplate>
                             <hr />
                         </SeparatorTemplate>
+                        <HeaderTemplate>
+                            <h1>單選方塊</h1>
+                            <hr />
+                        </HeaderTemplate>
                     </asp:Repeater>
 
                 </div>
@@ -166,8 +167,7 @@
                 <br />
                 <br />
                 <div class="input-radio">
-                    <h1>複選方塊</h1>
-                    <hr />
+
                     <asp:Repeater ID="Repeater3" runat="server" OnItemDataBound="Repeater3_ItemDataBound">
                         <ItemTemplate>
                             <h3>
@@ -185,6 +185,7 @@
 
                                     </div>
                                 </ItemTemplate>
+
                             </asp:Repeater>
 
                         </ItemTemplate>
@@ -192,6 +193,10 @@
                         <SeparatorTemplate>
                             <hr />
                         </SeparatorTemplate>
+                        <HeaderTemplate>
+                            <h1>複選方塊</h1>
+                            <hr />
+                        </HeaderTemplate>
                     </asp:Repeater>
 
                 </div>

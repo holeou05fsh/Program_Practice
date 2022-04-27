@@ -48,9 +48,13 @@ namespace Questionnaire
 
                 this.Repeater1.DataSource = QuestionData;
                 this.Repeater1.DataBind();
+                if (Repeater1.Items.Count == 0)
+                    Repeater1.Visible = false;
 
                 this.Repeater3.DataSource = QuestionData2;
                 this.Repeater3.DataBind();
+                if (Repeater3.Items.Count == 0) 
+                    Repeater3.Visible = false;
 
                 this.PlaceHolder1.Visible = false;
                 this.PlaceHolder2.Visible = false;
@@ -89,7 +93,7 @@ namespace Questionnaire
             string email = this.TextBox3.Text.Trim();
             string age = this.TextBox4.Text.Trim();
 
-            if (name == "" || phone == "" || email == "" || age == "")
+            if (name == "" || phone == "" || email == "" || age == "" || !Int32.TryParse(phone, out int n) || !Int32.TryParse(age, out int m))
                 infocheck = false;
             else
                 this.Session["info"] = name + "," + phone + "," + email + "," + age;
@@ -474,66 +478,68 @@ namespace Questionnaire
 
             List<Question> QuestionData = _Smgr.GetmanageQuestion((int)QSID, 1);
 
-            int numquestion = QuestionData[Questionnum].ID;
-            List<StatisticsData> StatisticsDatas = _Smgr.GetStatistics((int)QSID, 1, numquestion);
-
-            string[] answerlist = QuestionData[Questionnum].Answer.Split(';');  //12~15;16~18;19~22;23~30;30~40
-
-            List<StatisticsData> StatisticShows = new List<StatisticsData>();
-
-            foreach (string answer in answerlist)
+            if (QuestionData.Count != 0)
             {
-                StatisticsData StatisticShow = new StatisticsData()
-                {
-                    S_ID = QuestionData[Questionnum].QuestionnaireID,
-                    S_Title = QuestionData[Questionnum].Title,
-                    S_Answer = answer,
-                };
-                StatisticShows.Add(StatisticShow);
-            }
+                int numquestion = QuestionData[Questionnum].ID;
+                List<StatisticsData> StatisticsDatas = _Smgr.GetStatistics((int)QSID, 1, numquestion);
 
+                string[] answerlist = QuestionData[Questionnum].Answer.Split(';');  //12~15;16~18;19~22;23~30;30~40
 
-            int totalcount = 0;
-            foreach (StatisticsData StatisticsData in StatisticsDatas)
-            {
-                foreach (StatisticsData answerdataplus in StatisticShows)
+                List<StatisticsData> StatisticShows = new List<StatisticsData>();
+
+                foreach (string answer in answerlist)
                 {
-                    if (StatisticsData.Answer == answerdataplus.S_Answer)
+                    StatisticsData StatisticShow = new StatisticsData()
                     {
-                        //{19~22:1}
-                        answerdataplus.S_Answer = StatisticsData.Answer;
-                        answerdataplus.S_Count = StatisticsData.Count.ToString();
-                        totalcount += StatisticsData.Count;
+                        S_ID = QuestionData[Questionnum].QuestionnaireID,
+                        S_Title = QuestionData[Questionnum].Title,
+                        S_Answer = answer,
+                    };
+                    StatisticShows.Add(StatisticShow);
+                }
+
+
+                int totalcount = 0;
+                foreach (StatisticsData StatisticsData in StatisticsDatas)
+                {
+                    foreach (StatisticsData answerdataplus in StatisticShows)
+                    {
+                        if (StatisticsData.Answer == answerdataplus.S_Answer)
+                        {
+                            //{19~22:1}
+                            answerdataplus.S_Answer = StatisticsData.Answer;
+                            answerdataplus.S_Count = StatisticsData.Count.ToString();
+                            totalcount += StatisticsData.Count;
+                        }
                     }
                 }
-            }
 
 
-            foreach (StatisticsData answerdataplus in StatisticShows)
-            {
-                string answercount = answerdataplus.S_Count; //12~15;16~18;19~22;23~30;30~40
-
-                if (answercount != null)  //19~22:1
+                foreach (StatisticsData answerdataplus in StatisticShows)
                 {
-                    string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count) + 1).ToString() + "%";
-                    answerdataplus.S_Rate = ratio;
+                    string answercount = answerdataplus.S_Count; //12~15;16~18;19~22;23~30;30~40
+
+                    if (answercount != null)  //19~22:1
+                    {
+                        string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count) + 1).ToString() + "%";
+                        answerdataplus.S_Rate = ratio;
+                    }
+                    else
+                    {
+                        answerdataplus.S_Rate = "0%";
+                        answerdataplus.S_Count = "0";
+                    }
                 }
-                else
+
+                if (e.Item.ItemType == ListItemType.Item ||
+                   e.Item.ItemType == ListItemType.AlternatingItem)
                 {
-                    answerdataplus.S_Rate = "0%";
-                    answerdataplus.S_Count = "0";
+                    Repeater rptSubsection = e.Item.FindControl("Repeater2") as Repeater;
+                    rptSubsection.DataSource = StatisticShows;
+                    rptSubsection.DataBind();
+                    Questionnum += 1;
                 }
             }
-
-            if (e.Item.ItemType == ListItemType.Item ||
-               e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                Repeater rptSubsection = e.Item.FindControl("Repeater2") as Repeater;
-                rptSubsection.DataSource = StatisticShows;
-                rptSubsection.DataBind();
-                Questionnum += 1;
-            }
-
         }
 
         protected void Repeater3_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -541,73 +547,75 @@ namespace Questionnaire
             int? QSID = Convert.ToInt32(Request.QueryString["ID"]);
 
             List<Question> QuestionData2 = _Smgr.GetmanageQuestion((int)QSID, 2);
-
-            int numquestion = QuestionData2[QuestionnumTwo].ID;
-            List<StatisticsData> StatisticsDatas = _Smgr.GetStatisticsTwo((int)QSID, 2, numquestion);
-
-            string[] answerlist = QuestionData2[QuestionnumTwo].Answer.Split(';');
-            //活存/定存;儲蓄險;外幣存款;債券;ETF;信託基金;股票;房地產;外匯;虛擬貨幣
-
-            List<StatisticsData> StatisticShows = new List<StatisticsData>();
-
-            foreach (string answer in answerlist)
+            if (QuestionData2.Count > 0)
             {
-                StatisticsData StatisticShow = new StatisticsData()
-                {
-                    S_ID = QuestionData2[QuestionnumTwo].ID,
-                    S_Title = QuestionData2[QuestionnumTwo].Title,
-                    S_Answer = answer,
-                    S_Count = "0",
-                };
-                StatisticShows.Add(StatisticShow);
-            }
+                int numquestion = QuestionData2[QuestionnumTwo].ID;
+                List<StatisticsData> StatisticsDatas = _Smgr.GetStatisticsTwo((int)QSID, 2, numquestion);
 
-            int totalcount = 0;
-            foreach (StatisticsData StatisticsData in StatisticsDatas) //SQL
-            {
-                string[] datas = StatisticsData.Answer.Split(',');
+                string[] answerlist = QuestionData2[QuestionnumTwo].Answer.Split(';');
+                //活存/定存;儲蓄險;外幣存款;債券;ETF;信託基金;股票;房地產;外匯;虛擬貨幣
 
-                foreach (string data in datas)
+                List<StatisticsData> StatisticShows = new List<StatisticsData>();
+
+                foreach (string answer in answerlist)
                 {
-                    foreach (StatisticsData StatisticShow in StatisticShows)
+                    StatisticsData StatisticShow = new StatisticsData()
                     {
-                        if (data == StatisticShow.S_Answer)
+                        S_ID = QuestionData2[QuestionnumTwo].ID,
+                        S_Title = QuestionData2[QuestionnumTwo].Title,
+                        S_Answer = answer,
+                        S_Count = "0",
+                    };
+                    StatisticShows.Add(StatisticShow);
+                }
+
+                int totalcount = 0;
+                foreach (StatisticsData StatisticsData in StatisticsDatas) //SQL
+                {
+                    string[] datas = StatisticsData.Answer.Split(',');
+
+                    foreach (string data in datas)
+                    {
+                        foreach (StatisticsData StatisticShow in StatisticShows)
                         {
-                            int scount = Convert.ToInt32(StatisticShow.S_Count);
-                            StatisticShow.S_Count = (scount + 1).ToString();
-                            totalcount += 1;
+                            if (data == StatisticShow.S_Answer)
+                            {
+                                int scount = Convert.ToInt32(StatisticShow.S_Count);
+                                StatisticShow.S_Count = (scount + 1).ToString();
+                                totalcount += 1;
+                            }
                         }
                     }
+
                 }
-                
-            }
 
 
-            foreach (StatisticsData answerdataplus in StatisticShows)
-            {
-                string answercount = answerdataplus.S_Count; 
-
-                if (answercount!="0")  
+                foreach (StatisticsData answerdataplus in StatisticShows)
                 {
-                    string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count)).ToString() + "%";
-                    answerdataplus.S_Rate = ratio;
+                    string answercount = answerdataplus.S_Count;
+
+                    if (answercount != "0")
+                    {
+                        string ratio = ((100 / totalcount) * Convert.ToInt32(answerdataplus.S_Count)).ToString() + "%";
+                        answerdataplus.S_Rate = ratio;
+                    }
+                    else
+                    {
+                        answerdataplus.S_Rate = "0%";
+                        answerdataplus.S_Count = "0";
+                    }
                 }
-                else
+
+
+
+                if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
                 {
-                    answerdataplus.S_Rate = "0%";
-                    answerdataplus.S_Count = "0";
+                    Repeater rptSubsection = e.Item.FindControl("Repeater4") as Repeater;
+                    rptSubsection.DataSource = StatisticShows;
+                    rptSubsection.DataBind();
+                    QuestionnumTwo += 1;
                 }
-            }
 
-
-
-            if (e.Item.ItemType == ListItemType.Item ||
-   e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                Repeater rptSubsection = e.Item.FindControl("Repeater4") as Repeater;
-                rptSubsection.DataSource = StatisticShows;
-                rptSubsection.DataBind();
-                QuestionnumTwo += 1;
             }
 
         }

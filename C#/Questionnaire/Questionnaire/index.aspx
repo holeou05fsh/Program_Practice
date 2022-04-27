@@ -8,7 +8,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sdf</title>
+    <title>index</title>
     <link href="/CSS/index.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -65,7 +65,7 @@
                                     <td><%# Eval("Timestate") %></td>
                                     <td><%# Eval("StartTime", "{0:yyyy/MM/dd}") %></td>
                                     <td><%# Eval("EndTime", "{0:yyyy/MM/dd}") %></td>
-                                    <td><a href="#">前往</a></td>
+                                    <td><a href="/fontinput.aspx?ID=<%# Eval("ID") + "&page=3"%>">前往</a></td>
                                 </tr>
                             </ItemTemplate>
                         </asp:Repeater>
@@ -142,7 +142,7 @@
                                                 <td><%# Eval("StrState") %></td>
                                                 <td><%# Eval("StartTime", "{0:yyyy/MM/dd}") %></td>
                                                 <td><%# Eval("EndTime", "{0:yyyy/MM/dd}") %></td>
-                                                <td><a href="#">前往</a></td>
+                                                <td><a href='/endmanage.aspx?ID=<%# Eval("ID") %>#tab-4'>前往</a></td>
                                             </tr>
                                         </ItemTemplate>
                                     </asp:Repeater>

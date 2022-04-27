@@ -8,7 +8,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
+    <title>endmanage</title>
     <link href="/CSS/endmanage.css" rel="stylesheet" />
 </head>
 <body>
@@ -28,10 +28,10 @@
 
             <div class="right">
                 <div>
-                    <span id="tab-1">主頁</span>
-                    <span id="tab-2">頁面1</span>
-                    <span id="tab-3">頁面2</span>
-                    <span id="tab-4">頁面3</span>
+                    <span id="tab-1"></span>
+                    <span id="tab-2"></span>
+                    <span id="tab-3"></span>
+                    <span id="tab-4"></span>
 
                     <!-- 頁籤按鈕 -->
                     <div id="tab">

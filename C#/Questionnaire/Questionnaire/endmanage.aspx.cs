@@ -355,7 +355,7 @@ namespace Questionnaire
             if (tabcontent == 2)
             {
                 List<ArrayList> lists = new List<ArrayList>();
-
+                List<int> ID = new List<int>();
                 foreach (string joinsession in _joinsessions)
                 {
                     if (this.Session[joinsession] != null)
@@ -367,7 +367,7 @@ namespace Questionnaire
                             //ID QuestionnaireID, title, answer, qtype, required, TheMarkIsisNew
                             ArrayList list = new ArrayList()
                             {
-                                data[1], data[2], data[3], data[4], data[5]
+                                data[1], data[2], data[3], data[4], data[5], data[0] // QuestionnaireID, title, answer, qtype, required, 新ID
                             };
                             lists.Add(list);
                         }
@@ -375,7 +375,7 @@ namespace Questionnaire
                         {
                             ArrayList list = new ArrayList()
                             {
-                                data[1], data[2], data[3], data[4], data[5]
+                                data[1], data[2], data[3], data[4], data[5], data[0]  // QuestionnaireID, title, answer, qtype, required, 原ID
                             };
                             lists.Add(list);
                         }
@@ -574,11 +574,8 @@ namespace Questionnaire
 
         protected void btnSure2_Click(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-
-            }
-            //QuestionnaireID, title, answer, qtype, required
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+            //QuestionnaireID, title, answer, qtype, required, ID
             List<ArrayList> surechecks = SureCheck(2);
 
             if (surechecks.Count != 0)
@@ -587,12 +584,24 @@ namespace Questionnaire
 
                 foreach (ArrayList surecheck in surechecks)
                 {
+                    //int ID = Convert.ToInt32(surecheck[5]);
                     int QuestionnaireID = Convert.ToInt32(surecheck[0]);
                     string title = surecheck[1].ToString();
                     string answer = surecheck[2].ToString();
                     int qtype = Convert.ToInt32(surecheck[3]);
                     byte required = Convert.ToByte(surecheck[4].ToString() == "True" ? 1 : 0);
                     _qmgr.insertQuestion(QuestionnaireID, title, answer, qtype, required);
+
+                    //如果以填寫過的問卷也要可以修改的話用以下方式
+                    //if (ID < 100)
+                    //{
+                    //    _qmgr.insertQuestion(QuestionnaireID, title, answer, qtype, required, out int newQuestionid);
+
+                    //    _qmgr.updateAnswer(ID, newQuestionid);
+                    //}
+                    //else
+                    //    _qmgr.insertQuestion(QuestionnaireID, title, answer, qtype, required, out int newQuestionid);
+
                 }
                 this.Session["litmsgSureT"] = "※  儲存成功";
             }
@@ -1011,26 +1020,26 @@ namespace Questionnaire
         }
 
 
-        private void WriteToCSV(string FilePath, AnswerData info, List<Question> answer)
-        {
-            using (var file = new StreamWriter(FilePath))
-            {
-                //Person info
-                file.WriteLineAsync($"{"姓名"},{"年齡"},{"手機"},{"信箱"},{"填寫日期"}");
-                file.WriteLineAsync($"{info.Name},{info.Age},{info.Phone},{info.Email},{info.Date}");
+        //private void WriteToCSV(string FilePath, AnswerData info, List<Question> answer)
+        //{
+        //    using (var file = new StreamWriter(FilePath))
+        //    {
+        //        //Person info
+        //        file.WriteLineAsync($"{"姓名"},{"年齡"},{"手機"},{"信箱"},{"填寫日期"}");
+        //        file.WriteLineAsync($"{info.Name},{info.Age},{info.Phone},{info.Email},{info.Date}");
 
-                file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
+        //        file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
 
-                //Person answer
-                file.WriteLineAsync($"{"問題"},{"回答"},{"選擇"},{"種類"},{"必填"}");
-                foreach (var item in answer)
-                {
-                    file.WriteLineAsync($"{item.Title},{item.Answer},{item.Choose},{item.QType},{item.Required}");
-                }
-                file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
-                file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
-            }
-        }
+        //        //Person answer
+        //        file.WriteLineAsync($"{"問題"},{"回答"},{"選擇"},{"種類"},{"必填"}");
+        //        foreach (var item in answer)
+        //        {
+        //            file.WriteLineAsync($"{item.Title},{item.Answer},{item.Choose},{item.QType},{item.Required}");
+        //        }
+        //        file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
+        //        file.WriteLineAsync($"{" "},{" "},{" "},{" "},{" "}");
+        //    }
+        //}
 
         protected void inputCSV_Click(object sender, EventArgs e)
         {

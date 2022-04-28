@@ -109,7 +109,6 @@ namespace Questionnaire.Managers
             }
         }
 
-
         public List<StatisticsData> GetStatisticsTwo(int QuestionnaireID, int QType, int QuestionID)
         {
             string connStr = ConfigString.GetConfigString();

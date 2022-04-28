@@ -80,7 +80,7 @@ namespace Questionnaire.Managers
             }
         }
 
-        public void insertQuestion(int QuestionnaireID, string title, string answer, int qtype, byte required)
+        public void insertQuestion(int QuestionnaireID, string title, string answer, int qtype, byte required) //, out int newQuestionid
         {
             string connStr = ConfigString.GetConfigString();
             string commandText = @"
@@ -89,6 +89,10 @@ namespace Questionnaire.Managers
                                     VALUES
                                         (@QuestionnaireID, @title, @answer, @qtype, @required)
                                 ";
+            //string commandMaxIDText =
+            //$@"
+            //    SELECT MAX(ID) FROM Question
+            //";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connStr))
@@ -103,6 +107,37 @@ namespace Questionnaire.Managers
                         command.Parameters.AddWithValue("@required", required);
 
                         command.ExecuteNonQuery();
+
+                        //command.CommandText = commandMaxIDText;
+                        //newQuestionid = (int)command.ExecuteScalar();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void updateAnswer(int ID, int newQuestionid)
+        {
+            string connStr = ConfigString.GetConfigString();
+            string commandText = @"
+                                    UPDATE Answer
+                                    SET QuestionID = @newQuestionid
+                                    WHERE QuestionID = @ID
+                                 ";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        connection.Open();
+                        command.Parameters.AddWithValue("@ID", ID);
+                        command.Parameters.AddWithValue("@newQuestionid", newQuestionid);
+
+                        command.ExecuteNonQuery();
                     }
                 }
             }
@@ -113,7 +148,7 @@ namespace Questionnaire.Managers
         }
 
 
-        //===================================================================================
+        //========================================================
 
         public void insertPersonalinfo(int QuestionnaireID, string Name, int Age, int Phone, string Email, DateTime Date, out int PersonalinfoID)
         {
